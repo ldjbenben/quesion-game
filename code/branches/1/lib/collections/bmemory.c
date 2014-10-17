@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "benben.h"
 #include "bmemory.h"
 
-bmemory_pool lc_pools[BPOOL_MAX_NUM] = {{0}}; // 保存内存池集
+static bmemory_pool lc_pools[BPOOL_MAX_NUM] = {{0}}; // 保存内存池集
 
 static void bmemory_alloc_block(bmemory_pool*);
 

@@ -1,9 +1,14 @@
 #ifndef __type_h
 #define __type_h
 
+#define MAX_TEXT	1000
+#define MAX_CLIENT	5000
+
 typedef short word;
 typedef int dword;
+#ifndef bool
 typedef char bool;
+#endif
 
 typedef struct bconnection_s{
 	int fd; // socket id

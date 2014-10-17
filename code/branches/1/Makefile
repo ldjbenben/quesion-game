@@ -1,6 +1,6 @@
 VERSION =
 EXE = main$(VERSION)
-objects = $(EXE).o bmemory.o bhashmap.o blist.o thread_message.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+objects = $(EXE).o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_message.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 CC = gcc
 CFLAGS = -Wall -g -lpthread -I ./lib
 
@@ -13,11 +13,17 @@ $(EXE).o:$(EXE)$(VERSION).c
 thread_message.o:./func/thread_message.c
 	$(CC) $(CFLAGS) -c ./func/thread_message.c
 
+message.o:./func/message.c ./lib/message.h
+	$(CC) $(CFLAGS) -c ./func/message.c
+	
 wrappthread.o:./lib/wrappthread.c ./lib/unpthread.h
 	$(CC) $(CFLAGS) -c ./lib/wrappthread.c
 
 bmemory.o:./lib/collections/bmemory.c ./lib/bmemory.h
 	$(CC) $(CFLAGS) -c ./lib/collections/bmemory.c
+	
+bqueue.o:./lib/collections/bqueue.c ./lib/bqueue.h
+	$(CC) $(CFLAGS) -c ./lib/collections/bqueue.c
 
 blist.o:./lib/collections/blist.c ./lib/blist.h
 	$(CC) $(CFLAGS) -c ./lib/collections/blist.c -I ./lib

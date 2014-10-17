@@ -38,9 +38,9 @@ int main(int argc, char** argv)
 		
 		for(i=0; i<MAX_CLIENT; i++)
 		{
-			if(client_fds[i] == 0)
+			if(g_client_fds[i] == 0)
 			{
-				client_fds[i] = connfd;
+				g_client_fds[i] = connfd;
 			}
 		}
 		
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			clifds[i] = connfd;
+			g_client_fds[i] = connfd;
 		}
 			
 		Pthread_mutex_unlock(&clifd_mutex);
