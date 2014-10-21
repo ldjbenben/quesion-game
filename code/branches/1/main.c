@@ -1,10 +1,14 @@
 #include "benben.h"
 #include "unpthread.h"
+#include "bmysql.h"
 
 void sig_int(int signo);
+void* thread_recv(void*);
+void* thread_message_consume(void*);
 
 int	g_client_fds[MAX_CLIENT];
-pthread_t thread_message_tid; 
+pthread_t thread_recv_tid; 
+pthread_t thread_message_consume_tid;
 pthread_mutex_t clifd_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char** argv)
@@ -23,9 +27,12 @@ int main(int argc, char** argv)
 	}
 	
 	// 创建message线程
-	Pthread_create(&thread_message_tid, NULL, &thread_message, NULL);
+	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);
+	Pthread_create(&thread_message_consume_tid, NULL, &thread_message_consume, NULL);
 	
 	Signal(SIGINT, sig_int);
+	
+	bmysql_query("select * from qgame_users");
 	
 	int i=0;
 
@@ -41,6 +48,7 @@ int main(int argc, char** argv)
 			if(g_client_fds[i] == 0)
 			{
 				g_client_fds[i] = connfd;
+				break;
 			}
 		}
 		

@@ -1,8 +1,8 @@
 VERSION =
 EXE = main$(VERSION)
-objects = $(EXE).o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_message.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+objects = $(EXE).o bmysql.o user.o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 CC = gcc
-CFLAGS = -Wall -g -lpthread -I ./lib
+CFLAGS = -Wall -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./lib
 
 $(EXE):$(objects)
 	$(CC) $(CFLAGS) -o $(EXE) $(objects)
@@ -10,8 +10,17 @@ $(EXE):$(objects)
 $(EXE).o:$(EXE)$(VERSION).c
 	$(CC) $(CFLAGS) -c $(EXE)$(VERSION).c
 
-thread_message.o:./func/thread_message.c
-	$(CC) $(CFLAGS) -c ./func/thread_message.c
+bmysql.o:./db/mysql/bmysql.c
+	$(CC) $(CFLAGS) -c ./db/mysql/bmysql.c -I /usr/local/mysql/include -I ./lib
+	
+user.o:./controllers/user.c
+	$(CC) $(CFLAGS) -c ./controllers/user.c
+	
+thread_recv.o:./func/thread_recv.c
+	$(CC) $(CFLAGS) -c ./func/thread_recv.c
+	
+thread_message_consume.o:./func/thread_message_consume.c
+	$(CC) $(CFLAGS) -c ./func/thread_message_consume.c
 
 message.o:./func/message.c ./lib/message.h
 	$(CC) $(CFLAGS) -c ./func/message.c

@@ -12,6 +12,7 @@ typedef char bool;
 
 typedef struct bconnection_s{
 	int fd; // socket id
+	int room; // id of room
 	struct sockaddr_in addr;
 	bool is_auth; // connection status
 }bconnection;
@@ -23,6 +24,7 @@ typedef struct bmessage_header_s{
 }bmessage_header;
 
 typedef struct bmessage_s{
+	int connfd;
 	bmessage_header header;
 	char data[MAX_TEXT];
 }bmessage;

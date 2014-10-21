@@ -11,6 +11,4 @@
 #define NULL 0
 #endif
 
-void* thread_message(void* arg);
-
 #endif

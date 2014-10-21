@@ -31,9 +31,8 @@ bqueue_id_t bqueue_register(bqueue_size_t size)
 {
 	if(lc_bqueue_pool_id == 0)
 	{
-		lc_bqueue_pool_id = bmemory_pool_register(sizeof(bqueue_node), 2000, 1000);
+		lc_bqueue_pool_id = bmemory_pool_register(sizeof(bqueue_node), size, 1000);
 	}
-	
 	int id;
 	
 	for(id=0; id<BQUEUE_MAX_NUM; id++)
@@ -51,7 +50,6 @@ bqueue_id_t bqueue_register(bqueue_size_t size)
 	}
 	
 	lc_bqueues[id].capacity = size;
-
 	return id+1;
 }
 
@@ -124,7 +122,12 @@ void* bqueue_node_pop(bqueue_id_t id)
 	
 	bqueue_node* node = bqueue->header;
 	
-	if(node->next == NULL)
+	
+	if(bqueue->size == 0)
+	{
+		return NULL;
+	}
+	else if(node->next == NULL)
 	{
 		bqueue->tail = bqueue->header = NULL;
 	}

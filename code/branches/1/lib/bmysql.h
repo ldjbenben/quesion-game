@@ -1,0 +1,1 @@
+bool bmysql_query(const char* query);

@@ -2,12 +2,15 @@
 #include "bqueue.h"
 
 pthread_mutex_t g_recv_msg_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
-bqueue_id_t messages_qid;
+bqueue_id_t messages_qid = 0;
 
 void message_queue_init()
 {
-	bqueue_init();
-	messages_qid = bqueue_register(1000);
+	if(messages_qid == 0)
+	{
+		bqueue_init();
+		messages_qid = bqueue_register(1000);
+	}
 }
 
 void message_queue_push(bmessage* pMsg)
@@ -19,8 +22,20 @@ void message_queue_push(bmessage* pMsg)
 
 bmessage* message_queue_pop()
 {
-	pthread_mutex_lock(&g_recv_msg_queue_mutex);
-	bmessage* pMsg = (bmessage*)bqueue_node_pop(messages_qid);
-	pthread_mutex_unlock(&g_recv_msg_queue_mutex);
+	bmessage* pMsg = NULL;
+	if(messages_qid != 0)
+	{
+		pthread_mutex_lock(&g_recv_msg_queue_mutex);
+		pMsg = (bmessage*)bqueue_node_pop(messages_qid);
+		pthread_mutex_unlock(&g_recv_msg_queue_mutex);
+	}
 	return pMsg;
+}
+
+bool message_queue_empty()
+{
+	pthread_mutex_lock(&g_recv_msg_queue_mutex);
+	bool ret = bqueue_empty(messages_qid);
+	pthread_mutex_unlock(&g_recv_msg_queue_mutex);
+	return ret;
 }

@@ -171,10 +171,10 @@ static void* bmemory_find(bmemory_pool* pPool, bmemory_size_t num)
 void* bmemory_get(bmemory_pool_id_t id, bmemory_size_t num)
 {
 	bmemory_pool* pPool = get_bmemory_pool(id);
-	
 	// 内存池是否存在
 	if(pPool == NULL)
 	{
+		printf("bmemory_get error!\n");
 		exit(1);
 	}
 	
