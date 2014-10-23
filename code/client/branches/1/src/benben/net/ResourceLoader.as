@@ -15,6 +15,7 @@ package benben.net
 		 * 已加载完成的资源
 		 */
 		private var _assets:Dictionary;
+		private var _index:int;
 		
 		/**
 		 * 资源配置xml文件地址
@@ -23,7 +24,7 @@ package benben.net
 		{
 		}
 		
-		public function addFile():void
+		public function addFile(url:String):void
 		{
 			
 		}
@@ -49,24 +50,15 @@ package benben.net
 			
 		}
 		
-		private function loadFile(file:String):void
+		private function loadFile():void
 		{
 			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, completeHandler);
+			loader.addEventListener(Event.COMPLETE, function(event:Event):void{
+				loadFile();
+			});
 			
-			for each (var key in _queue)
-			{ 
-				var request:URLRequest = new URLRequest(_queue[key]);
-				loader.load(request);
-			} 
-		}
-		
-		private function completeHandler(event:Event):void
-		{
-			var loader:URLLoader = URLLoader(event.target);
-			trace("completeHandler: " + loader.data);
-			
-			var data:XML = loader.data as XML;
+			var request:URLRequest = new URLRequest(_queue[_index]);
+			loader.load(request);
 		}
 		
 	}
