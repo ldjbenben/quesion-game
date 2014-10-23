@@ -1,18 +1,26 @@
 package
 {
+	import application.views.BaseView;
+	import application.views.GameView;
+	import application.views.StartView;
+	
+	import benben.Wolf;
+	
+	import com.adobe.crypto.MD5;
+	
 	import flash.display.Sprite;
+	import flash.utils.getDefinitionByName;
 	
-	import benben.net.CustomSocket;
+	[SWF(width=800, height=600)]
 	
-	[SWF(width=700, height=600)]
 	public class Main extends Sprite
 	{
-		private var socket:CustomSocket;
+		private var _startScene:BaseView;
+		private var _GameScene:BaseView;
 		
 		public function Main()
 		{
-//			socket = new CustomSocket("192.168.1.130", 9999);
-			socket = new CustomSocket("192.168.1.155", 9999);
+			Wolf.createApplication(this, "./data/application.xml").run();
 		}
 	}
 }

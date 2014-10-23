@@ -6,23 +6,22 @@ package benben.net
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
-	import flash.utils.ByteArray;
 	
-	public class CustomSocket extends Socket 
+	public class CustomSocket extends Socket
 	{
 		private var response:String;
 		
-		public function CustomSocket(host:String = null, port:uint = 0) 
+		public function CustomSocket(host:String=null, port:int=0)
 		{
 			super();
-			configureListeners();
-			if (host && port)  
+			configListeners();
+			if (host && port)
 			{
 				super.connect(host, port);
 			}
 		}
 		
-		private function configureListeners():void 
+		private function configListeners():void
 		{
 			addEventListener(Event.CLOSE, closeHandler);
 			addEventListener(Event.CONNECT, connectHandler);
@@ -31,14 +30,14 @@ package benben.net
 			addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
 		}
 		
-		private function writeln(str:String):void 
+		private function writeln(str:String):void
 		{
 			str += "\n";
-			try 
+			try
 			{
 				writeUTFBytes(str);
 			}
-			catch(e:IOError) 
+			catch(e:IOError)
 			{
 				trace(e);
 			}
@@ -46,54 +45,69 @@ package benben.net
 		
 		private function sendRequest():void
 		{
-			trace("sendRequest");
-			response = "";
-			this.writeShort(1);
-			this.writeShort(0xa);
-			this.writeShort(0xb);
-			this.writeByte(0x40);
-			this.writeByte(0x41);
-			this.writeByte(0x42);
-//			this.writeShort(1);
-			this.writeByte(0);
-			//this.writeMultiByte("hello world", "utf8");
-			//writeln("GET /");
+			trace("连接服务器成功");
+			writeByte(0x01);
+			writeByte(0x00);
+			writeByte(0x18);
+			writeByte(0x00);
+			writeUTF("hello 服务器!");
 			flush();
 		}
 		
 		private function readResponse():void
 		{
 			var str:String = readUTFBytes(bytesAvailable);
+			trace(str);
 			response += str;
 		}
 		
 		private function closeHandler(event:Event):void
 		{
-			trace("closeHandler: " + event);
-			trace(response.toString());
+			trace("closeHandler:" + event);
+			super.close();
 		}
 		
-		private function connectHandler(event:Event):void 
-		{
+		private function connectHandler(event:Event):void {
 			trace("connectHandler: " + event);
 			sendRequest();
 		}
 		
-		private function ioErrorHandler(event:IOErrorEvent):void 
-		{
+		private function ioErrorHandler(event:IOErrorEvent):void {
 			trace("ioErrorHandler: " + event);
 		}
 		
-		private function securityErrorHandler(event:SecurityErrorEvent):void 
-		{
+		private function securityErrorHandler(event:SecurityErrorEvent):void {
 			trace("securityErrorHandler: " + event);
 		}
 		
-		private function socketDataHandler(event:ProgressEvent):void 
-		{
+		private function socketDataHandler(event:ProgressEvent):void {
 			trace("socketDataHandler: " + event);
 			readResponse();
 		}
-	}
 
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
