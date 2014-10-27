@@ -7,7 +7,7 @@ package benben.base
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 
-	public class ViewManager extends Component
+	public class ViewManager
 	{
 		/**
 		 * 舞台对象引用
