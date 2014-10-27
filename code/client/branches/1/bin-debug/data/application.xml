@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application>
+	<assets>data/assets.xml</assets>
+	<components>
+		<component id="viewManager">
+			<property name="defultView" value="main" />
+		</component>
+		<component id="loading" class="benben.display.Loading">
+		</component>
+	</components>
+</application>

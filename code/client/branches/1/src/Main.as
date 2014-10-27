@@ -1,15 +1,8 @@
 package
 {
 	import application.views.BaseView;
-	import application.views.GameView;
-	import application.views.StartView;
-	
 	import benben.Wolf;
-	
-	import com.adobe.crypto.MD5;
-	
 	import flash.display.Sprite;
-	import flash.utils.getDefinitionByName;
 	
 	[SWF(width=800, height=600)]
 	
