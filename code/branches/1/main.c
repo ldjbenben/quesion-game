@@ -1,6 +1,7 @@
 #include "benben.h"
 #include "unpthread.h"
 #include "bmysql.h"
+#include "connection.h"
 
 void sig_int(int signo);
 void* thread_recv(void*);
@@ -31,6 +32,7 @@ int main(int argc, char** argv)
 	Pthread_create(&thread_message_consume_tid, NULL, &thread_message_consume, NULL);
 	
 	Signal(SIGINT, sig_int);
+	connection_hashmap_init();
 	
 	bmysql_query("select * from qgame_users");
 	
@@ -59,6 +61,12 @@ int main(int argc, char** argv)
 		else
 		{
 			g_client_fds[i] = connfd;
+
+			bconnection conn = {{0}};
+			conn.fd = connfd;
+			conn.addr = cliaddr;
+			conn.is_auth = false;
+			connection_hashmap_set(connfd, &conn);
 		}
 			
 		Pthread_mutex_unlock(&clifd_mutex);

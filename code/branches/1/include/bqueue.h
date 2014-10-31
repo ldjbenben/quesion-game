@@ -22,12 +22,6 @@ typedef struct bqueue_t{
 }bqueue;
 
 /**
- * bqueue初始化函数
- * 在使用bqueue函数前，应该先调用此函数
- * @return void
- */
-void bqueue_init(void);
-/**
  * 析构bqueue
  * 注：当前不在使用bqueue的时，应该调用此函数，进行内存的释放
  * @return void

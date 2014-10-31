@@ -3,6 +3,10 @@
 void controller_user_login(int connfd, void* pData)
 {
 	printf("user login:%s\n", (char*)pData);
+	//int login_id = *(int*)pData;
+	//char* pwd = (char*)pData+sizeof(int);
+	//int loginId = read_int(pData);
+	//char* pwd = read_bytes(pData);
 }
 
 void controller_user_list(int connfd, void* pData)

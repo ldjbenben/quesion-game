@@ -4,17 +4,25 @@
 #define MAX_TEXT	1000
 #define MAX_CLIENT	5000
 
+#define false 0
+#define true 1
+
+#ifndef NULL
+#define NULL 0
+#endif
+
 typedef short word;
 typedef int dword;
 #ifndef bool
 typedef char bool;
 #endif
+typedef char byte;
 
 typedef struct bconnection_s{
 	int fd; // socket id
-	int room; // id of room
-	struct sockaddr_in addr;
+	struct sockaddr_in* addr;
 	bool is_auth; // connection status
+	char recv_text[MAX_TEXT];
 }bconnection;
 
 typedef struct bmessage_header_s{

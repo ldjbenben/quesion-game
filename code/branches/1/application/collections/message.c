@@ -8,7 +8,6 @@ void message_queue_init()
 {
 	if(messages_qid == 0)
 	{
-		bqueue_init();
 		messages_qid = bqueue_register(1000);
 	}
 }

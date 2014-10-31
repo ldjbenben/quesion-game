@@ -25,15 +25,17 @@ void thread_message_destory()
 
 void* thread_recv(void* arg)
 {
-	FD_ZERO(&rfds);
 	int maxfd = 0;
 	int i;
 	struct timeval tv;
 	int retval;
 	char buf[MAX_TEXT];
 	int len = 0;
+	
 	thread_message_init();
 	message_queue_init();
+	
+	FD_ZERO(&rfds);
 	
 	while(true)
 	{

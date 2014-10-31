@@ -35,3 +35,14 @@ void Inet_pton(int family, const char *strptr, void *addrptr)
 
 	/* nothing to return */
 }
+
+/*
+char* itoa(int value, char* str, int radix)
+{
+	void* p = &value;
+	for(int i=0; i<sizeof(int); i++)
+	{
+		str[
+	}
+}
+*/

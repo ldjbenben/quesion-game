@@ -4,12 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 bqueue lc_bqueues[BQUEUE_MAX_NUM] = {{0}};
 bmemory_pool_id_t lc_bqueue_pool_id = 0;
 
+static bool init = false;
 static bqueue* get_bqueue(bqueue_id_t);
 
-void bqueue_init()
+static void bqueue_init()
 {
 	
 }
@@ -29,10 +31,16 @@ void bqueue_destroy(void)
 
 bqueue_id_t bqueue_register(bqueue_size_t size)
 {
+	if(!init)
+	{
+		bqueue_init();
+	}
+	
 	if(lc_bqueue_pool_id == 0)
 	{
 		lc_bqueue_pool_id = bmemory_pool_register(sizeof(bqueue_node), size, 1000);
 	}
+	
 	int id;
 	
 	for(id=0; id<BQUEUE_MAX_NUM; id++)

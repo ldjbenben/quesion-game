@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assets>
+	<item id="001" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_2001.jpg?v=5"  title="bg_3001" delay="true"/>
+	<item id="002" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=5"  title="bg_3002"/>
+	<item id="003" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=5"  title="bg_3003"/>
+	<item id="004" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=5"  title="bg_3004"/>
+	<item id="005" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_6001.jpg?v=5"  title="bg_3005"/>
+	<item id="006" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_2001.jpg?v=6"  title="bg_3001"/>
+	<item id="007" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=7"  title="bg_3002"/>
+	<item id="008" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=8"  title="bg_3003"/>
+	<item id="009" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=9"  title="bg_3004"/>
+	<item id="010" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_6001.jpg?v=10"  title="bg_3005"/>
+	<item id="011" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_2001.jpg?v=26"  title="bg_3001"/>
+	<item id="012" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=27"  title="bg_3002"/>
+	<item id="013" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=28"  title="bg_3003"/>
+	<item id="014" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=29"  title="bg_3004"/>
+	<item id="015" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_6001.jpg?v=15"  title="bg_3005"/>
+	<item id="021" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_2001.jpg?v=16"  title="bg_3001"/>
+	<item id="022" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=17"  title="bg_3002"/>
+	<item id="023" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=18"  title="bg_3003"/>
+	<item id="024" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=19"  title="bg_3064"/>
+	<item id="025" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_6001.jpg?v=110"  title="bg_3605"/>
+</assets>

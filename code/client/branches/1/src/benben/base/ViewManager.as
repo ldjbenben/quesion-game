@@ -1,6 +1,7 @@
 package benben.base
 {
 	import application.views.BaseView;
+	import application.views.LoadingView;
 	
 	import benben.utils.StringHelper;
 	
@@ -9,9 +10,6 @@ package benben.base
 
 	public class ViewManager
 	{
-		/**
-		 * 舞台对象引用
-		 */
 		private var _stage:Sprite;
 		/**
 		 * 视图集合
@@ -21,14 +19,9 @@ package benben.base
 		 * 当前视图ID
 		 */
 		private var _currentView:String;
-		/**
-		 * 默认视图ID
-		 */
-		public var defaultView:String;
 		
-		public function ViewManager(stage:Sprite)
+		public function ViewManager()
 		{
-			_stage = stage;
 //			_scenes = scenes;
 //			_viewsObj[defaultId] = (new _scenes[defaultId]) as Scene;
 //			_currentScene = defaultId;
@@ -45,8 +38,8 @@ package benben.base
 				if(_currentView)
 				{
 					_viewsObj[_currentView].out();
+					this._stage.removeChild(_viewsObj[_currentView]);
 				}
-				this._stage.removeChild(_viewsObj[id]);
 				_viewsObj[id].init();
 			}
 			else
@@ -64,7 +57,7 @@ package benben.base
 		
 		private function createView(id:String):BaseView
 		{
-			var view:Object = getDefinitionByName("application.views."+StringHelper.ucword(id)+"View");
+			var view:Object = new (getDefinitionByName("application.views."+StringHelper.ucword(id)+"View"))();
 			
 			if(!(view is BaseView))
 			{
@@ -73,5 +66,22 @@ package benben.base
 			
 			return (view as BaseView);
 		}
+
+		/**
+		 * 舞台对象引用
+		 */
+		public function get stage():Sprite
+		{
+			return _stage;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set stage(value:Sprite):void
+		{
+			_stage = value;
+		}
+
 	}
 }

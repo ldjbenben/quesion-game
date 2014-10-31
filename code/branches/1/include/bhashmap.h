@@ -23,11 +23,6 @@ typedef struct _bhashmap_t{
 }bhashmap_t;
 
 /**
- * bhashmap初始化函数
- * 在使用bhashmap函数前，应该先调用此函数
- */
-void bhashmap_init(void);
-/**
  * 析构bhashmap
  * 注：当前不在使用bhashmap的时，应该调用此函数，进行内存的释放
  * @return void

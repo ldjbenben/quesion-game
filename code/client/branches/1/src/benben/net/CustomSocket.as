@@ -1,5 +1,7 @@
 package benben.net
 {
+	import benben.base.Component;
+	
 	import flash.errors.IOError;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -7,20 +9,25 @@ package benben.net
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
 	
-	public class CustomSocket extends Socket
+	public class CustomSocket extends Component
 	{
+		private var _socket:Socket;
 		private var response:String;
+		private var _host:String;
+		private var _port:int;
+		private var _connected:Boolean;
 		
-		public function CustomSocket(host:String=null, port:int=0)
+		public function CustomSocket()
 		{
 			super();
-			configListeners();
-			if (host && port)
-			{
-				super.connect(host, port);
-			}
 		}
 		
+		public function connect():void
+		{
+//			configListeners();
+			_socket.connect(_host, _port);
+		}
+		/*
 		private function configListeners():void
 		{
 			addEventListener(Event.CLOSE, closeHandler);
@@ -85,6 +92,27 @@ package benben.net
 			readResponse();
 		}
 
+		public function get host():String
+		{
+			return _host;
+		}
+
+		public function set host(value:String):void
+		{
+			_host = value;
+		}
+
+		public function get port():int
+		{
+			return _port;
+		}
+
+		public function set port(value:int):void
+		{
+			_port = value;
+		}
+
+*/
 	}
 }
 

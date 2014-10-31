@@ -2,7 +2,7 @@ package application.display.dialog
 {
 	import benben.net.CustomSocket;
 	
-	import benben.Wolf;
+	import benben.Benben;
 	
 	import application.display.button.SimpleButton;
 	
@@ -79,19 +79,19 @@ package application.display.dialog
 		private function onLoginButtonClick(event:MouseEvent):void
 		{
 			trace("cdddd");
-			Wolf.app.socket.writeByte(0x02);
-			Wolf.app.socket.writeByte(0x00);
-			Wolf.app.socket.writeByte(0x01);
-			Wolf.app.socket.writeByte(0x00);
-			Wolf.app.socket.writeByte(0x21);
-			Wolf.app.socket.writeByte(0x00);
-			Wolf.app.socket.writeInt(10);
-			Wolf.app.socket.writeInt(100);
-			Wolf.app.socket.writeByte(50);
-			Wolf.app.socket.writeUTFBytes("hello world中国!");
-			Wolf.app.socket.writeByte(0x00);
-			Wolf.app.socket.writeByte(2);
-			Wolf.app.socket.flush();
+			Benben.app.socket.writeByte(0x02);
+			Benben.app.socket.writeByte(0x00);
+			Benben.app.socket.writeByte(0x01);
+			Benben.app.socket.writeByte(0x00);
+			Benben.app.socket.writeByte(0x21);
+			Benben.app.socket.writeByte(0x00);
+			Benben.app.socket.writeInt(10);
+			Benben.app.socket.writeInt(100);
+			Benben.app.socket.writeByte(50);
+			Benben.app.socket.writeUTFBytes("hello world中国!");
+			Benben.app.socket.writeByte(0x00);
+			Benben.app.socket.writeByte(2);
+			Benben.app.socket.flush();
 		}
 	}
 }

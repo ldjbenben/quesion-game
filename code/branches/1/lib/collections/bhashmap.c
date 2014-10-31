@@ -9,11 +9,12 @@ bmemory_pool_id_t lc_pool_id_pentry = 0;
 bmemory_pool_id_t lc_pool_id_entry = 0;
 bmemory_pool_id_t lc_pool_id_value = 0;
 
+static int init = 0;
 static bhashmap_t* _get_bhashmap(bhashmap_id_t);
 static bhashmap_entry_t* _find_entry(bhashmap_t*, const char*, bhashmap_size_t*);
 static unsigned int _find_hash_index(bhashmap_t*, const char*);
 
-void bhashmap_init(void)
+static void bhashmap_init(void)
 {
 	lc_pool_id_pentry = bmemory_pool_register(sizeof(bhashmap_entry_t*), 5000, 5000);
 	lc_pool_id_entry = bmemory_pool_register(sizeof(bhashmap_entry_t), 5000, 5000);
@@ -22,6 +23,7 @@ void bhashmap_init(void)
 
 void bhashmap_destroy(void)
 {
+
 	bmemory_pool_unregister(lc_pool_id_pentry);
 	bmemory_pool_unregister(lc_pool_id_entry);
 	bmemory_pool_unregister(lc_pool_id_value);
@@ -29,11 +31,16 @@ void bhashmap_destroy(void)
 
 bhashmap_id_t bhashmap_register(void)
 {
+	if(!init)
+	{
+		bhashmap_init();
+	}
+	
 	int id;
 	
 	for(id=0; id<BHASHMAP_MAX_NUM; id++)
 	{
-		if(lc_bhashmaps[id].size == 0)
+		if(lc_bhashmaps[id].capacity == 0)
 		{
 			break;
 		}
@@ -47,7 +54,7 @@ bhashmap_id_t bhashmap_register(void)
 	
 	lc_bhashmaps[id].capacity = BHASHMAP_INIT_CAPACITY;
 	lc_bhashmaps[id].size = 0;
-	lc_bhashmaps[id].table = bmemory_get(lc_pool_id_pentry, lc_bhashmaps[id].size);
+	lc_bhashmaps[id].table = bmemory_get(lc_pool_id_pentry, lc_bhashmaps[id].capacity);
 	
 	int i;
 	
@@ -181,7 +188,7 @@ static bhashmap_entry_t* _find_entry(bhashmap_t* bhashmap, const char* key, bhas
 {
 	bhashmap_size_t i = _find_hash_index(bhashmap, key);
 	bhashmap_entry_t* entry = bhashmap->table[i];
-printf("key:%s,i:%d,entry:%p\n", key, i, entry);
+
 	while(entry != NULL)
 	{
 		if(strcmp(entry->key, key) == 0)

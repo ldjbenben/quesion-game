@@ -1,5 +1,5 @@
-#ifndef __func_h
-#define __func_h
+#ifndef __message_h
+#define __message_h
 
 #include "benben.h"
 
