@@ -19,15 +19,15 @@ package benben.net
 		
 		public function CustomSocket()
 		{
-			super();
+			_socket = new Socket();			
 		}
 		
 		public function connect():void
 		{
-//			configListeners();
+			configListeners();
 			_socket.connect(_host, _port);
 		}
-		/*
+		
 		private function configListeners():void
 		{
 			addEventListener(Event.CLOSE, closeHandler);
@@ -42,7 +42,7 @@ package benben.net
 			str += "\n";
 			try
 			{
-				writeUTFBytes(str);
+				_socket.writeUTFBytes(str);
 			}
 			catch(e:IOError)
 			{
@@ -53,17 +53,17 @@ package benben.net
 		private function sendRequest():void
 		{
 			trace("连接服务器成功");
-			writeByte(0x01);
-			writeByte(0x00);
-			writeByte(0x18);
-			writeByte(0x00);
-			writeUTF("hello 服务器!");
-			flush();
+			_socket.writeByte(0x01);
+			_socket.writeByte(0x00);
+			_socket.writeByte(0x18);
+			_socket.writeByte(0x00);
+			_socket.writeUTF("hello 服务器!");
+			_socket.flush();
 		}
 		
 		private function readResponse():void
 		{
-			var str:String = readUTFBytes(bytesAvailable);
+			var str:String = _socket.readUTFBytes(_socket.bytesAvailable);
 			trace(str);
 			response += str;
 		}
@@ -71,7 +71,7 @@ package benben.net
 		private function closeHandler(event:Event):void
 		{
 			trace("closeHandler:" + event);
-			super.close();
+			_socket.close();
 		}
 		
 		private function connectHandler(event:Event):void {
@@ -112,7 +112,6 @@ package benben.net
 			_port = value;
 		}
 
-*/
 	}
 }
 

@@ -15,7 +15,9 @@ void connection_hashmap_init()
 void connection_hashmap_set(int connfd, bconnection* value)
 {
 	char key[12];
-	//itoa(connfd, key);
-	sprintf(key, "%s", connfd);
+	//itoa(connfd, key, 10);
+	itoa(123, key, 10);
+	printf("key:%s\n", key);
+	//sprintf(key, "%s", connfd);
 	bhashmap_set(connection_id, key, value, sizeof(bconnection));
 }

@@ -7,7 +7,7 @@ package application.display.button
 	
 	public class SimpleButton extends Sprite
 	{
-		protected var _defaultColor:uint = 0xFFFFFF;
+		protected var _defaultColor:uint = 0x00FFFF;
 		protected var _mouseOverColor:uint = 0x00FFFF;
 		protected var _title:String;
 		

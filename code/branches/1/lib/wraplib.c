@@ -36,13 +36,38 @@ void Inet_pton(int family, const char *strptr, void *addrptr)
 	/* nothing to return */
 }
 
-/*
+/**
+ * 获取最高阶
+ */
+static int _get_order_num(int value, int* ret)
+{
+	int order = 1;
+
+	while((value=value/10) > 10)
+	{
+		printf("value:%d\n", value);
+		order++;
+	}
+	*(ret) = value%10;
+	return order;
+}
+
 char* itoa(int value, char* str, int radix)
 {
-	void* p = &value;
-	for(int i=0; i<sizeof(int); i++)
+	int i = 0;
+	int order = 0;
+	int ret = 0;
+	
+	while(value>=10 && (order = _get_order_num(value, &ret)))
 	{
-		str[
+		printf("%d>>%d\n", value, order);
+		
+		value -= ret * pow(10, order);
+		str[i] = 48 + ret;
+		order = 0;
+		i++;
 	}
+	
+	str[i] = 48+value;
+	return str;
 }
-*/

@@ -136,6 +136,8 @@ void Writen(int fd, const void* ptr, size_t nbytes);
 int	Select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 
 void Inet_pton(int, const char *, void *);
+char* itoa(int value, char* str, int radix);
+
 void str_echo(int);
 void str_cli(FILE *, int);
 

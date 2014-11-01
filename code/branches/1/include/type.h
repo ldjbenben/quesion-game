@@ -20,7 +20,7 @@ typedef char byte;
 
 typedef struct bconnection_s{
 	int fd; // socket id
-	struct sockaddr_in* addr;
+	struct sockaddr* addr;
 	bool is_auth; // connection status
 	char recv_text[MAX_TEXT];
 }bconnection;

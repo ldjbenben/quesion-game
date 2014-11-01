@@ -8,7 +8,7 @@ package benben.base
 	import flash.display.Sprite;
 	import flash.utils.getDefinitionByName;
 
-	public class ViewManager
+	public class ViewManager extends Component
 	{
 		private var _stage:Sprite;
 		/**

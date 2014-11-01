@@ -8,6 +8,10 @@ package benben.net
 	public class ResourceLoader
 	{
 		/**
+		 * 资源列表xml文件
+		 */
+		private var _files:Array;
+		/**
 		 * 未加载的资源列表
 		 */
 		private var _queue:Array;
@@ -15,6 +19,9 @@ package benben.net
 		 * 已加载完成的资源
 		 */
 		private var _assets:Dictionary;
+		/**
+		 * 当前待加载的资源索引
+		 */
 		private var _index:int;
 		
 		/**
@@ -22,18 +29,31 @@ package benben.net
 		 */
 		public function ResourceLoader()
 		{
+			_queue = new Array();
+			_assets = new Dictionary();
 		}
 		
-		public function addFile(url:String):void
+		public function addFile(uri:String):void
 		{
 			
 		}
 		
-		public function addAssetsFile(file:String):void
+		public function addAssetsFile(uri:String):void
 		{
+			_files.push(uri);
+			
 			var loader:URLLoader = new URLLoader();
-			loader.addEventListener(Event.COMPLETE, completeHandler);
-			var request:URLRequest = new URLRequest(file);
+			var request:URLRequest = new URLRequest(uri);
+			
+			loader.addEventListener(Event.COMPLETE, function(event:Event):void{
+				var data:XML = new XML(event.target.data);
+				
+				for each(var item:XML in data.item)
+				{
+					_queue.push(item);
+				}
+
+			});
 			
 			try
 			{
@@ -47,14 +67,17 @@ package benben.net
 		
 		public function load():void
 		{
-			
+			loadFile();
 		}
 		
 		private function loadFile():void
 		{
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, function(event:Event):void{
-				loadFile();
+				if(++_index < _queue.length)
+				{
+					loadFile();
+				}
 			});
 			
 			var request:URLRequest = new URLRequest(_queue[_index]);

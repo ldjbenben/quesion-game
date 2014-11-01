@@ -32,8 +32,8 @@ int main(int argc, char** argv)
 	Pthread_create(&thread_message_consume_tid, NULL, &thread_message_consume, NULL);
 	
 	Signal(SIGINT, sig_int);
+	printf("step:1\n");
 	connection_hashmap_init();
-	
 	bmysql_query("select * from qgame_users");
 	
 	int i=0;
@@ -61,12 +61,13 @@ int main(int argc, char** argv)
 		else
 		{
 			g_client_fds[i] = connfd;
-
-			bconnection conn = {{0}};
+			printf("step:2\n");
+			bconnection conn;
 			conn.fd = connfd;
 			conn.addr = cliaddr;
 			conn.is_auth = false;
 			connection_hashmap_set(connfd, &conn);
+			printf("step:3\n");
 		}
 			
 		Pthread_mutex_unlock(&clifd_mutex);

@@ -4,6 +4,8 @@ package application.views
 	import application.display.obstacle.Pillar;
 	import application.display.player.Player;
 	
+	import benben.Benben;
+	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
@@ -29,6 +31,7 @@ package application.views
 			_startButton.y = 350;
 			addChild(_startButton);
 			_startButton.addEventListener(MouseEvent.CLICK, onStartButtonClick);
+			Benben.app.socket.connect();
 		}
 		
 		override public function enter():void
@@ -42,8 +45,8 @@ package application.views
 		
 		private function onStartButtonClick(evt:Event):void
 		{
-			removeChild(_startButton);
-			run();
+			//removeChild(_startButton);
+			//run();
 		}
 		
 		private function run():void
