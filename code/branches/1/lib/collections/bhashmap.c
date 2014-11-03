@@ -113,7 +113,7 @@ void bhashmap_set(bhashmap_id_t id, const char* key, void* value, bhashmap_value
 	if(entry == NULL)
 	{
 		entry = bmemory_get(lc_pool_id_entry, 1);
-		entry->key = key;
+		memcpy(entry->key, key, BHASHMAP_KEY_MAX_LEN);
 		entry->pre = NULL;
 		entry->next =  bhashmap->table[index];
 		if(bhashmap->table[index] != NULL) bhashmap->table[index]->pre = entry;
@@ -141,6 +141,7 @@ void* bhashmap_get(bhashmap_id_t id, const char* key)
 	
 	if(entry != NULL)
 	{
+		printf("entry->value:%p\n", entry->value);
 		return entry->value;
 	}
 	

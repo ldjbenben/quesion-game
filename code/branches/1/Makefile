@@ -1,15 +1,17 @@
 VERSION =
 EXE = main$(VERSION)
-objects = $(EXE).o connection.o bmysql.o user.o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+objects = $(EXE).o bsocket.o connection.o bmysql.o user.o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 CC = gcc
-CFLAGS = -Wall -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./include
+CFLAGS = -Wall -Werror -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./include
 
 $(EXE):$(objects)
 	$(CC) $(CFLAGS) -o $(EXE) $(objects)
 	
 $(EXE).o:$(EXE)$(VERSION).c
 	$(CC) $(CFLAGS) -c $(EXE)$(VERSION).c
-
+bsocket.o:./lib/bsocket.c
+	$(CC) $(CFLAGS) -c ./lib/bsocket.c -I ./include
+	
 bmysql.o:./lib/db/mysql/bmysql.c
 	$(CC) $(CFLAGS) -c ./lib/db/mysql/bmysql.c -I /usr/local/mysql/include -I ./include
 	

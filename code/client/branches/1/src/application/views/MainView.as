@@ -1,15 +1,16 @@
 package application.views
 {
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.net.Socket;
+	import flash.utils.Timer;
+	
 	import application.display.button.SimpleButton;
 	import application.display.obstacle.Pillar;
 	import application.display.player.Player;
 	
 	import benben.Benben;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 
 	public class MainView extends BaseView
 	{
@@ -31,7 +32,7 @@ package application.views
 			_startButton.y = 350;
 			addChild(_startButton);
 			_startButton.addEventListener(MouseEvent.CLICK, onStartButtonClick);
-			Benben.app.socket.connect();
+			onStartButtonClick(null);
 		}
 		
 		override public function enter():void
@@ -47,6 +48,20 @@ package application.views
 		{
 			//removeChild(_startButton);
 			//run();
+			var data:Array = new Array();
+			data.push(100);
+			Benben.app.socket.connect();
+			
+			Benben.app.socket.writeInt(2);
+			Benben.app.socket.writeInt(100);
+			Benben.app.socket.writeInt(200);
+			Benben.app.socket.writeInt(300);
+			Benben.app.socket.sendRequest(2, testResponse); 
+		}
+		
+		private function testResponse(so:Socket):void
+		{
+			trace("ccada");
 		}
 		
 		private function run():void

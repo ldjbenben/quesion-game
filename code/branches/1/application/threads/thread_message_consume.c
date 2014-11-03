@@ -5,7 +5,6 @@
 void* thread_message_consume(void* arg)
 {
 	bmessage* pMsg;
-	void* pData;
 	
 	while(true)
 	{

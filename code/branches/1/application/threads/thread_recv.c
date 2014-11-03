@@ -90,6 +90,6 @@ static bmessage* get_message(int connfd, char* data)
 	bmessage* msg = bmemory_get(lc_message_pool_id, 1);
 	msg->connfd = connfd;
 	memcpy((void*)msg+sizeof(int), data, MAX_TEXT);
-	msg->header.id = ntohs(msg->header.id);
+	msg->header.id = ntohl(msg->header.id);
 	return msg;
 }

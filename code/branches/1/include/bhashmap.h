@@ -3,14 +3,16 @@
 
 #define BHASHMAP_MAX_NUM 1000 // 最多可以注册的bhashmap数
 #define BHASHMAP_INIT_CAPACITY 10 // 初始容量大小
-#define LOAD_FACTOR 75 // 加载因子百分比(暂时没用到)
+#define BHASHMAP_LOAD_FACTOR 75 // 加载因子百分比(暂时没用到)
+#define BHASHMAP_KEY_MAX_LEN 20 // 键最大长度
 
 typedef int bhashmap_id_t;
 typedef int bhashmap_size_t;
 typedef int bhashmap_value_size_t;
 
 typedef struct _bhashmap_entry_t{
-	const char* key;
+	//const char* key;
+	char key[BHASHMAP_KEY_MAX_LEN];
 	void* value;
 	struct _bhashmap_entry_t* pre;
 	struct _bhashmap_entry_t* next;

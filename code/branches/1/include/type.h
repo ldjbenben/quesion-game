@@ -23,12 +23,15 @@ typedef struct bconnection_s{
 	struct sockaddr* addr;
 	bool is_auth; // connection status
 	char recv_text[MAX_TEXT];
+	int recv_cursor;
+	char send_text[MAX_TEXT];
+	int send_cursor;
 }bconnection;
 
 typedef struct bmessage_header_s{
-	word id;
-	word type;
-	word len;
+	int id;
+	int type;
+	int len;
 }bmessage_header;
 
 typedef struct bmessage_s{

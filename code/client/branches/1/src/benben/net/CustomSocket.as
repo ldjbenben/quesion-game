@@ -8,6 +8,7 @@ package benben.net
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
+	import flash.utils.Dictionary;
 	
 	public class CustomSocket extends Component
 	{
@@ -16,10 +17,15 @@ package benben.net
 		private var _host:String;
 		private var _port:int;
 		private var _connected:Boolean;
+		/**
+		 * 请求与回调函数映射集
+		 */
+		private var _requestMap:Dictionary;
 		
 		public function CustomSocket()
 		{
-			_socket = new Socket();			
+			_socket = new Socket();
+			_requestMap = new Dictionary();
 		}
 		
 		public function connect():void
@@ -30,11 +36,11 @@ package benben.net
 		
 		private function configListeners():void
 		{
-			addEventListener(Event.CLOSE, closeHandler);
-			addEventListener(Event.CONNECT, connectHandler);
-			addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-			addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-			addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
+			_socket.addEventListener(Event.CLOSE, closeHandler);
+			_socket.addEventListener(Event.CONNECT, connectHandler);
+			_socket.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			_socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+			_socket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataHandler);
 		}
 		
 		private function writeln(str:String):void
@@ -50,22 +56,25 @@ package benben.net
 			}
 		}
 		
-		private function sendRequest():void
+		public function writeInt(value:int):void
+		{
+			_socket.writeInt(value);
+		}
+		
+		public function sendRequest(id:int, response:Function):void
 		{
 			trace("连接服务器成功");
-			_socket.writeByte(0x01);
-			_socket.writeByte(0x00);
-			_socket.writeByte(0x18);
-			_socket.writeByte(0x00);
-			_socket.writeUTF("hello 服务器!");
+			_requestMap[id] = response;
 			_socket.flush();
 		}
 		
 		private function readResponse():void
 		{
-			var str:String = _socket.readUTFBytes(_socket.bytesAvailable);
-			trace(str);
-			response += str;
+			var id:int = _socket.readInt();
+			if(_requestMap.hasOwnProperty(id))
+			{
+				_requestMap[id](_socket);
+			}
 		}
 		
 		private function closeHandler(event:Event):void
@@ -76,7 +85,7 @@ package benben.net
 		
 		private function connectHandler(event:Event):void {
 			trace("connectHandler: " + event);
-			sendRequest();
+			//sendRequest();
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {

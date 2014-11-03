@@ -5,7 +5,6 @@ package application.views
 	import benben.events.AssetsProgressEvent;
 	
 	import flash.events.Event;
-	import flash.events.ProgressEvent;
 	
 	public class LoadingView extends BaseView
 	{

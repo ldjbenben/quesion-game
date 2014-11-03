@@ -4,6 +4,7 @@
  */
 
 #include	"unp.h"
+#include <math.h>
 
 const char* Inet_ntop(int family, const void *addrptr, char *strptr, size_t len)
 {
@@ -45,7 +46,6 @@ static int _get_order_num(int value, int* ret)
 
 	while((value=value/10) > 10)
 	{
-		printf("value:%d\n", value);
 		order++;
 	}
 	*(ret) = value%10;
@@ -59,9 +59,7 @@ char* itoa(int value, char* str, int radix)
 	int ret = 0;
 	
 	while(value>=10 && (order = _get_order_num(value, &ret)))
-	{
-		printf("%d>>%d\n", value, order);
-		
+	{		
 		value -= ret * pow(10, order);
 		str[i] = 48 + ret;
 		order = 0;
