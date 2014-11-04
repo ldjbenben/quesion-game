@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 		else
 		{
 			g_client_fds[i] = connfd;
-			bconnection conn;
+			bconnection conn = {0};
 			conn.fd = connfd;
 			conn.addr = cliaddr;
 			conn.is_auth = false;

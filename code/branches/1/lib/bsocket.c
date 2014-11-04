@@ -1,9 +1,16 @@
 #include "bsocket.h"
 
-void write_int(bconnection* conn, int value)
+void socket_write_int(bconnection* conn, int value)
 {
-	*((int*)((void*)conn->send_text + conn->send_cursor)) = htonl(value);
+	void* p = ( (void*)(conn->send_text) ) + conn->send_cursor;
+	printf("conn->send_text:%p\tsend_cursor:%d\tp:%p\n", conn->send_text, conn->send_cursor, p);
+	*((int*)p) = htonl(value);
 	conn->send_cursor += sizeof(int);
+}
+
+void socket_flush(bconnection* conn)
+{
+	Writen(conn->fd, conn->send_text, conn->send_cursor);
 }
 
 /*

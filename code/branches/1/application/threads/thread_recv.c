@@ -6,16 +6,13 @@
 extern int g_client_fds[];
 
 fd_set rfds;
-bmemory_pool_id_t lc_message_pool_id;
+
 
 static bmessage* get_message(int, char*);
 
 void thread_message_init()
 {
-	if(lc_message_pool_id == 0)
-	{
-		lc_message_pool_id = bmemory_pool_register(MAX_TEXT, 2000, 1000);
-	}
+	message_init();
 }
 
 void thread_message_destory()
@@ -33,7 +30,6 @@ void* thread_recv(void* arg)
 	int len = 0;
 	
 	thread_message_init();
-	message_queue_init();
 	
 	FD_ZERO(&rfds);
 	
@@ -70,13 +66,14 @@ void* thread_recv(void* arg)
 			{
 				bzero(buf, MAX_TEXT);
 				len = recv(g_client_fds[i], buf, MAX_TEXT, 0);
+				
 				if(len < 0)
 				{
 					printf("recv msg fial. the errno is %d, error info is %s.\n", errno, strerror(errno));
 				}
 				else if(len > 0)
 				{
-					message_queue_push(get_message(g_client_fds[i], buf));
+					message_queue_push(_create_message(g_client_fds[i], buf));
 				}	
 			}
 		}
@@ -85,11 +82,19 @@ void* thread_recv(void* arg)
 	return NULL;
 }
 
-static bmessage* get_message(int connfd, char* data)
+static bmessage* _create_message(int connfd, char* data)
 {
-	bmessage* msg = bmemory_get(lc_message_pool_id, 1);
-	msg->connfd = connfd;
+	/* 
+		此处获取了conn的指针，以后的操作也会用到此指针，后期考虑下能否
+		传递过去，以后的相关操作不需要重新获取.
+	*/
+	bconnection* conn = connection_hashmap_get(connfd);
+	bmessage* msg = bmessage* message_malloc();
+	
 	memcpy((void*)msg+sizeof(int), data, MAX_TEXT);
+	msg->connfd = connfd;
 	msg->header.id = ntohl(msg->header.id);
+	msg->conn = conn;
+	
 	return msg;
 }

@@ -18,6 +18,19 @@ typedef char bool;
 #endif
 typedef char byte;
 
+typedef struct bmessage_header_s{
+	int id;
+	int type;
+	int request_id;
+	int len;
+}bmessage_header;
+
+typedef struct bmessage_s{
+	bconnection* conn;
+	bmessage_header header;
+	char data[MAX_TEXT];
+}bmessage;
+
 typedef struct bconnection_s{
 	int fd; // socket id
 	struct sockaddr* addr;
@@ -27,18 +40,6 @@ typedef struct bconnection_s{
 	char send_text[MAX_TEXT];
 	int send_cursor;
 }bconnection;
-
-typedef struct bmessage_header_s{
-	int id;
-	int type;
-	int len;
-}bmessage_header;
-
-typedef struct bmessage_s{
-	int connfd;
-	bmessage_header header;
-	char data[MAX_TEXT];
-}bmessage;
 
 //typedef message_header  message_element_type;
 

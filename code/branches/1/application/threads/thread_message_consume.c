@@ -14,15 +14,16 @@ void* thread_message_consume(void* arg)
 			switch(pMsg->header.id)
 			{
 				case 1:
-					controller_user_login(pMsg->connfd, pMsg->data);
+					controller_user_login(pMsg);
 					break;
 				case 2:
-					controller_user_list(pMsg->connfd, pMsg->data);
+					controller_user_list(pMsg);
 					break;
 				default:
 					printf("Have not controller %d!\n", pMsg->header.id);
 					break;
 			}
+			message_free(pMsg);
 		}
 	}
 	

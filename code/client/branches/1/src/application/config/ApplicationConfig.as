@@ -15,7 +15,7 @@ package application.config
 			};
 		}
 		
-		private static function components():Dictionary
+		private static function components():Dictionary 
 		{
 			var components:Dictionary = new Dictionary();
 			

@@ -2,12 +2,12 @@
 #include "bsocket.h"
 #include "connection.h"
 
-void controller_user_login(int connfd, void* pData)
+void controller_user_login(bmessage* pMsg)
 {
 
 }
 
-void controller_user_list(int connfd, void* pData)
+void controller_user_list(bmessage* pMsg)
 {
 /*
 	struct _params{
@@ -16,8 +16,6 @@ void controller_user_list(int connfd, void* pData)
 	
 	struct _params* params = (struct _params*)(pData);
 */
-	bconnection* conn = connection_hashmap_get(connfd);
-	write_int(conn, 8);
-	//Writen(connfd, conn->send_text, conn->send_cursor);
-	
+	socket_write_int(pMsg->conn, 8);
+	socket_flush();
 }

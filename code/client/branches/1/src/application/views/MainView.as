@@ -1,16 +1,17 @@
 package application.views
 {
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TimerEvent;
-	import flash.net.Socket;
-	import flash.utils.Timer;
-	
+	import application.config.ApplicationConfig;
 	import application.display.button.SimpleButton;
 	import application.display.obstacle.Pillar;
 	import application.display.player.Player;
 	
 	import benben.Benben;
+	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.net.Socket;
+	import flash.utils.Timer;
 
 	public class MainView extends BaseView
 	{
@@ -52,11 +53,14 @@ package application.views
 			data.push(100);
 			Benben.app.socket.connect();
 			
+			/*
 			Benben.app.socket.writeInt(2);
 			Benben.app.socket.writeInt(100);
 			Benben.app.socket.writeInt(200);
 			Benben.app.socket.writeInt(300);
 			Benben.app.socket.sendRequest(2, testResponse); 
+			//set(key, value, );
+			*/
 		}
 		
 		private function testResponse(so:Socket):void

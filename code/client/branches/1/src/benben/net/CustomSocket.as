@@ -17,6 +17,7 @@ package benben.net
 		private var _host:String;
 		private var _port:int;
 		private var _connected:Boolean;
+		
 		/**
 		 * 请求与回调函数映射集
 		 */
@@ -56,25 +57,20 @@ package benben.net
 			}
 		}
 		
-		public function writeInt(value:int):void
+		public function send(data:Array):void
 		{
-			_socket.writeInt(value);
-		}
-		
-		public function sendRequest(id:int, response:Function):void
-		{
-			trace("连接服务器成功");
-			_requestMap[id] = response;
-			_socket.flush();
-		}
-		
-		private function readResponse():void
-		{
-			var id:int = _socket.readInt();
-			if(_requestMap.hasOwnProperty(id))
+			for(var i:int; i<data.length; i++)
 			{
-				_requestMap[id](_socket);
+				var obj:Object = data[i];
+				switch(obj[i])
+				{
+					case 'int':
+						_socket.writeInt(obj["value"]);
+						break;
+				}
 			}
+			
+			_socket.flush();
 		}
 		
 		private function closeHandler(event:Event):void
@@ -96,9 +92,9 @@ package benben.net
 			trace("securityErrorHandler: " + event);
 		}
 		
-		private function socketDataHandler(event:ProgressEvent):void {
-			trace("socketDataHandler: " + event);
-			readResponse();
+		private function socketDataHandler(event:ProgressEvent):void 
+		{
+			dispatchEvent(event);
 		}
 
 		public function get host():String
@@ -119,6 +115,11 @@ package benben.net
 		public function set port(value:int):void
 		{
 			_port = value;
+		}
+
+		public function get socket():Socket
+		{
+			return _socket;
 		}
 
 	}
