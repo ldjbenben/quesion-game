@@ -2,8 +2,9 @@ package benben.base
 {
 	import benben.display.widgets.loading.Loading;
 	import benben.net.AssetsLoader;
-	import benben.net.CustomSocket;
 	import benben.net.IAssetsLoading;
+	import benben.net.connectors.IConnector;
+	import benben.net.connectors.SocketConnector;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -18,7 +19,7 @@ package benben.base
 		private var _stage:Sprite;
 		private var _assetsLoader:AssetsLoader;
 		private var _viewManager:ViewManager;
-		private var _socket:CustomSocket = null;
+		private var _connector:IConnector;
 		private var _componentsConfig:Dictionary;
 		private var _components:Dictionary;
 		private var _views:Dictionary;
@@ -61,9 +62,9 @@ package benben.base
 		{
 			var components:Dictionary = new Dictionary();
 
-			components["assetsLoader"] = {"classname":"benben.net.AssetsLoader"};
-			components["viewManager"] = {"classname":"benben.base.ViewManager", "stage":_stage};
-			components["socket"] = {"classname":"benben.net.CustomSocket"};
+			components["assetsLoader"] = {"classname":benben.net.AssetsLoader};
+			components["viewManager"] = {"classname":benben.base.ViewManager, "stage":_stage};
+			components["connector"] = {"classname":benben.net.connectors.SocketConnector};
 			
 			registerComponents(components);
 		}
@@ -117,21 +118,21 @@ package benben.base
 		
 		protected function createComponent(config:Object):Component
 		{
-			var obj:Class = getDefinitionByName(config["classname"]) as Class;
+			//var obj:Class = getDefinitionByName(config["classname"]) as Class;
 			var component:Object;
 			var len:int = arguments.length;
 			
 			if(len == 1)
 			{
-				component = (new obj());
+				component = (new (config.classname)());
 			}
 			else if(len == 2)
 			{
-				component = (new obj(arguments[1]));
+				component = (new (config.classname)(arguments[1]));
 			}
 			else if(len == 3)
 			{
-				component = (new obj(arguments[2], arguments[3]));
+				component = (new (config.classname)(arguments[2], arguments[3]));
 			}
 			
 			delete config["classname"];
@@ -155,10 +156,11 @@ package benben.base
 			return getComponent("viewManager") as ViewManager;
 		}
 		
-		public function get socket():CustomSocket
+		public function get connector():IConnector
 		{
-			return getComponent("socket") as CustomSocket;
+			return getComponent("connector") as IConnector;
 		}
+
 		
 	}
 }

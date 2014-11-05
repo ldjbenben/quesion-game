@@ -6,6 +6,7 @@ package application.views
 	import application.display.player.Player;
 	
 	import benben.Benben;
+	import benben.net.TransferDataType;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -49,10 +50,8 @@ package application.views
 		{
 			//removeChild(_startButton);
 			//run();
-			var data:Array = new Array();
-			data.push(100);
-			Benben.app.socket.connect();
-			
+			Benben.app.connector.set("uid", 8, TransferDataType.INT);
+			Benben.app.connector.send("userLogin", testResponse);
 			/*
 			Benben.app.socket.writeInt(2);
 			Benben.app.socket.writeInt(100);
@@ -63,7 +62,7 @@ package application.views
 			*/
 		}
 		
-		private function testResponse(so:Socket):void
+		private function testResponse():void
 		{
 			trace("ccada");
 		}

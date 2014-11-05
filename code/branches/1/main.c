@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 			conn.fd = connfd;
 			conn.addr = cliaddr;
 			conn.is_auth = false;
+			conn.send_cursor = SENDBUF_RESERVED_SPACE;
 			connection_hashmap_set(connfd, &conn);
 		}
 			

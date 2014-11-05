@@ -9,5 +9,5 @@ byte read_byte(int connfd);
 byte* read_bytes(int connfd);
 */
 
-void socket_write_int(bconnection* conn, int value);
-void socket_flush(bconnection* conn);
+void socket_write_int(bmessage* pMsg, int value);
+void socket_flush(bmessage* pMsg);

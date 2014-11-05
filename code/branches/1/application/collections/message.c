@@ -1,9 +1,10 @@
 #include "message.h"
+#include "bmemory.h"
 #include "bqueue.h"
 
 static pthread_mutex_t g_recv_msg_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
-static bmemory_pool_id_t lc_message_pool_id;
-static bqueue_id_t lc_lc_messages_qid = 0;
+static bmemory_pool_id_t lc_message_pool_id = 0;
+static bqueue_id_t lc_messages_qid = 0;
 
 static bool init = false;
 

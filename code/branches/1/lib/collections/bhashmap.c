@@ -141,7 +141,6 @@ void* bhashmap_get(bhashmap_id_t id, const char* key)
 	
 	if(entry != NULL)
 	{
-		printf("entry->value:%p\n", entry->value);
 		return entry->value;
 	}
 	

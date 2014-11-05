@@ -2,13 +2,14 @@
 #include "bmemory.h"
 #include "bqueue.h"
 #include "message.h"
+#include "connection.h"
 
 extern int g_client_fds[];
 
 fd_set rfds;
 
 
-static bmessage* get_message(int, char*);
+static bmessage* _create_message(int connfd, char* data);
 
 void thread_message_init()
 {
@@ -89,12 +90,15 @@ static bmessage* _create_message(int connfd, char* data)
 		传递过去，以后的相关操作不需要重新获取.
 	*/
 	bconnection* conn = connection_hashmap_get(connfd);
-	bmessage* msg = bmessage* message_malloc();
+	bmessage* msg = message_malloc();
 	
-	memcpy((void*)msg+sizeof(int), data, MAX_TEXT);
-	msg->connfd = connfd;
+	memcpy((void*)msg, data, MAX_TEXT);
 	msg->header.id = ntohl(msg->header.id);
+	msg->header.client_context_id = ntohl(msg->header.client_context_id);
+	msg->header.len = ntohl(msg->header.len);
 	msg->conn = conn;
+	
+	printf("%d\t%d\t%d\t\n", msg->header.id, msg->header.client_context_id, msg->header.len);
 	
 	return msg;
 }

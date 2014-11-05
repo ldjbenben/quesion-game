@@ -20,7 +20,7 @@ package application.config
 			var components:Dictionary = new Dictionary();
 			
 			components["assetsLoader"] = {"assetsFile":"assets/assets.xml"};
-			components["socket"] = {"host":"192.168.1.155", "port":9999};
+			components["connector"] = {"host":"192.168.1.155", "port":9999};
 			
 			return components;
 		}
