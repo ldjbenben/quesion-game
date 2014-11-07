@@ -11,12 +11,14 @@ package benben.net.connectors
 	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.Socket;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 
 	public class SocketConnector extends Component implements IConnector
 	{
 		private var _socket:Socket;
 		private var _data:Array;
+		private var _bytes:ByteArray;
 		private var _callbackMap:Dictionary;
 		private var _callbackCursor:int;
 		private var _host:String;
@@ -28,6 +30,7 @@ package benben.net.connectors
 		{
 			_socket = new Socket();
 			_data = new Array();
+			_bytes = new ByteArray();
 			_callbackMap = new Dictionary();
 		}
 		
@@ -57,7 +60,7 @@ package benben.net.connectors
 			}
 		}
 		
-		public function set(key:String, value:*, type:String):void
+		public function addParam(key:String, value:*, type:String):void
 		{
 			_data.push({"value":value, "type":type});
 			_bytesNum += sizeof(value, type);
@@ -72,39 +75,45 @@ package benben.net.connectors
 			
 			switch(type)
 			{
-				case "int":
-				case "float":
+				case TransferDataType.INT:
 					num = 4;
+					break;
+				case TransferDataType.STRING:
+					num = value.length;
 					break;
 			}
 			
 			return num;
 		}
 		
-		public function send(apiname:String, callback:Function):void
+		public function request(apiname:String, callback:Function):void
 		{
 			var d:Array = new Array();
 			var apiObj:Object = ApiConfig.get(apiname);
 			
 			_callbackMap[_callbackCursor] = callback;
 			
-			_socket.writeInt(apiObj.id);
-			_socket.writeInt(_callbackCursor);
-			_socket.writeInt(_bytesNum);
+			_bytes.writeInt(apiObj.id);
+			_bytes.writeInt(_callbackCursor);
+			_bytes.writeInt(_bytesNum);
 			
 			_callbackCursor++;
 			
 			for(var i:int; i<_data.length; i++)
 			{
 				var obj:Object = _data[i];
-				switch(obj[i])
+				switch(obj.type)
 				{
 					case TransferDataType.INT:
-						_socket.writeInt(obj["value"]);
+						_bytes.writeInt(obj["value"]);
+						break;
+					case TransferDataType.STRING:
+						_bytes.writeUTF(obj["value"]);
 						break;
 				}
 			}
 			
+			_socket.writeBytes(_bytes);
 			_socket.flush();
 			reset();
 		}

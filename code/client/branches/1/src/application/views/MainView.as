@@ -50,8 +50,9 @@ package application.views
 		{
 			//removeChild(_startButton);
 			//run();
-			Benben.app.connector.set("uid", 8, TransferDataType.INT);
-			Benben.app.connector.send("userLogin", testResponse);
+			Benben.app.connector.addParam("uid", 8, TransferDataType.INT);
+			Benben.app.connector.addParam("pwd", "09cca18a30bc34727b0254943811239a中国", TransferDataType.STRING);
+			Benben.app.connector.request("userLogin", testResponse);
 			/*
 			Benben.app.socket.writeInt(2);
 			Benben.app.socket.writeInt(100);

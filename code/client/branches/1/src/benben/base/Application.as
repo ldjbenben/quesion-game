@@ -25,6 +25,7 @@ package benben.base
 		private var _views:Dictionary;
 		private var _loading:Loading;
 		private var _defaultView:String = "loading";
+		private var _charset:String = "utf-8";
 		
 		public function Application(stage:Sprite, config:Object)
 		{
@@ -159,6 +160,16 @@ package benben.base
 		public function get connector():IConnector
 		{
 			return getComponent("connector") as IConnector;
+		}
+
+		public function get charset():String
+		{
+			return _charset;
+		}
+
+		public function set charset(value:String):void
+		{
+			_charset = value;
 		}
 
 		

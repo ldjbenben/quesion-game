@@ -93,6 +93,7 @@ static bmessage* _create_message(int connfd, char* data)
 	bmessage* msg = message_malloc();
 	
 	memcpy((void*)msg, data, MAX_TEXT);
+	msg->read_cursor = 0;
 	msg->header.id = ntohl(msg->header.id);
 	msg->header.client_context_id = ntohl(msg->header.client_context_id);
 	msg->header.len = ntohl(msg->header.len);

@@ -10,6 +10,7 @@ package application.config
 		public static function config():Object
 		{
 			return {
+				"charset":"utf-8",
 				"views":views(),
 				"components":components()
 			};

@@ -4,6 +4,8 @@
 #define MAX_TEXT	1000
 #define MAX_CLIENT	5000
 
+#define TRANS_STR_LEN 254
+
 #define false 0
 #define true 1
 
@@ -19,14 +21,13 @@ typedef char bool;
 typedef char byte;
 
 
+
 typedef struct bconnection_s{
 	int fd; // socket id
 	struct sockaddr* addr;
 	bool is_auth; // connection status
-	char recv_text[MAX_TEXT];
-	int recv_cursor;
 	char send_text[MAX_TEXT];
-	int send_cursor;
+	int write_cursor;
 }bconnection;
 
 typedef struct bmessage_header_s{
@@ -38,6 +39,7 @@ typedef struct bmessage_header_s{
 typedef struct bmessage_s{
 	bmessage_header header;
 	char data[MAX_TEXT];
+	int read_cursor;
 	bconnection* conn;
 }bmessage;
 

@@ -18,6 +18,8 @@ package
 		
 		public function Main()
 		{
+			var a:String = "a中国";
+			trace("len:"+a.length+"  "+a.charCodeAt(0))
 			Benben.createApplication(this, ApplicationConfig.config()).run();
 		}
 	}

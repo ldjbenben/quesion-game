@@ -2,7 +2,7 @@ package benben.net.connectors
 {
 	public interface IConnector
 	{
-		function set(key:String, value:*, type:String):void;
-		function send(apiname:String, callback:Function):void;
+		function addParam(key:String, value:*, type:String):void;
+		function request(apiname:String, callback:Function):void;
 	}
 }
