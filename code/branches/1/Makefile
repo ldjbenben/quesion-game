@@ -19,7 +19,7 @@ connection.o:./application/collections/connection.c ./include/connection.h
 	$(CC) $(CFLAGS) -c ./application/collections/connection.c
 	
 user.o:./application/controllers/user.c
-	$(CC) $(CFLAGS) -c ./application/controllers/user.c
+	$(CC) $(CFLAGS) -c ./application/controllers/user.c -I /usr/local/mysql/include
 	
 thread_recv.o:./application/threads/thread_recv.c
 	$(CC) $(CFLAGS) -c ./application/threads/thread_recv.c

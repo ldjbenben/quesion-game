@@ -1,6 +1,5 @@
 #include "benben.h"
 #include "unpthread.h"
-#include "bmysql.h"
 #include "connection.h"
 
 void sig_int(int signo);
@@ -64,7 +63,6 @@ int main(int argc, char** argv)
 			conn.fd = connfd;
 			conn.addr = cliaddr;
 			conn.is_auth = false;
-			conn.write_cursor = SENDBUF_RESERVED_SPACE;
 			connection_hashmap_set(connfd, &conn);
 		}
 			

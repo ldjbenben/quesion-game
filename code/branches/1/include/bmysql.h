@@ -1,6 +1,12 @@
 #ifndef __bmysql_h
 #define __bmysql_h
 
-void bmysql_query(const char*);
+#include "mysql.h"
+
+MYSQL_RES* bmysql_query(const char* query);
+MYSQL_RES* bmysql_query_scalar(const char* query, char** v);
+
+int bmysql_execute(const char* query);
+
 
 #endif

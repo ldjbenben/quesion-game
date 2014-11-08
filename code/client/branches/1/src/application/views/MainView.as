@@ -1,6 +1,5 @@
 package application.views
 {
-	import application.config.ApplicationConfig;
 	import application.display.button.SimpleButton;
 	import application.display.obstacle.Pillar;
 	import application.display.player.Player;
@@ -11,7 +10,7 @@ package application.views
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
-	import flash.net.Socket;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 
 	public class MainView extends BaseView
@@ -24,7 +23,6 @@ package application.views
 		private var _startButton:SimpleButton;
 		private var _peopleDownTime:uint;
 		private var _peopleSpeed:int = 0;
-		//private var _
 		
 		override public function init():void
 		{
@@ -50,8 +48,8 @@ package application.views
 		{
 			//removeChild(_startButton);
 			//run();
-			Benben.app.connector.addParam("uid", 8, TransferDataType.INT);
-			Benben.app.connector.addParam("pwd", "09cca18a30bc34727b0254943811239a中国", TransferDataType.STRING);
+			Benben.app.connector.addParam("uid", 3, TransferDataType.INT);
+			Benben.app.connector.addParam("pwd", "09cca18a30bc34727b0254943811239a", TransferDataType.STRING);
 			Benben.app.connector.request("userLogin", testResponse);
 			/*
 			Benben.app.socket.writeInt(2);
@@ -63,8 +61,12 @@ package application.views
 			*/
 		}
 		
-		private function testResponse():void
+		private function testResponse(bytes:ByteArray):void
 		{
+			var code:int = bytes.readInt();
+			var a:int = bytes.readInt();
+			//trace("username:"+bytes.readUTF()+" uid:"+bytes.readInt()+" pwd:"+bytes.readUTF());
+			
 			trace("ccada");
 		}
 		

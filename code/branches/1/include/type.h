@@ -26,9 +26,14 @@ typedef struct bconnection_s{
 	int fd; // socket id
 	struct sockaddr* addr;
 	bool is_auth; // connection status
-	char send_text[MAX_TEXT];
-	int write_cursor;
 }bconnection;
+
+typedef struct bresponse_s{
+	//int client_context_id;
+	int code; // 结果码
+	char data[MAX_TEXT];
+	int cursor;
+}bresponse;
 
 typedef struct bmessage_header_s{
 	int id;

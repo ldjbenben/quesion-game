@@ -1,11 +1,5 @@
 package benben.net.connectors
 {
-	import application.config.ApiConfig;
-	
-	import benben.Benben;
-	import benben.base.Component;
-	import benben.net.TransferDataType;
-	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -13,6 +7,11 @@ package benben.net.connectors
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	
+	import application.config.ApiConfig;
+	
+	import benben.base.Component;
+	import benben.net.TransferDataType;
 
 	public class SocketConnector extends Component implements IConnector
 	{
@@ -65,7 +64,24 @@ package benben.net.connectors
 			_data.push({"value":value, "type":type});
 			_bytesNum += sizeof(value, type);
 		}
-		
+		/*
+		public function getParam(key:String, type:String):*
+		{
+			var value:*;
+			
+			switch(type)
+			{
+				case TransferDataType.INT:
+					value = _socket.readInt();
+					break;
+				case TransferDataType.STRING:
+					value = _socket.readUTF();
+					break;
+			}
+			
+			return value;
+		}
+		*/
 		/**
 		 * 获取value所占字节数
 		 */
@@ -130,7 +146,9 @@ package benben.net.connectors
 			
 			if(_callbackMap.hasOwnProperty(msgId))
 			{
-				_callbackMap[msgId]();
+				var bytes:ByteArray = new ByteArray();
+				_socket.readBytes(bytes);
+				_callbackMap[msgId](bytes);
 			}
 		}
 		

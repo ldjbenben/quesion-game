@@ -30,18 +30,18 @@ char* socket_read_string(bmessage* pMsg, char* recv, trans_str_size_t* len);
 /**
  * 往给定的bmessage结构中写入一个整数
  */
-void socket_write_int(bmessage* pMsg, int value);
+void socket_write_int(bresponse* response, int value);
 /**
  * 往给定的bmessage结构中写入一个短整数
  */
-void socket_write_short(bmessage* pMsg, short value);
+void socket_write_short(bresponse* response, short value);
 /**
  * 往给定的bmessage结构中写入字符串
  * @param str 指向源字符串地址
  * @param len 字符串长度
  */
-void socket_write_string(bmessage* pMsg, const char* str, trans_str_size_t len);
+void socket_write_string(bresponse* response, const char* str, trans_str_size_t len);
 /**
  * 刷新缓冲发送数据
  */
-void socket_flush(bmessage* pMsg);
+void socket_flush(bmessage* msg, bresponse* response);

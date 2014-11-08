@@ -1,5 +1,4 @@
 #include "benben.h"
-#include "mysql.h"
 #include "bmysql.h"
 
 static MYSQL mysql = {{0}};
@@ -13,6 +12,11 @@ static bool connected = false;
 #define MYSQL_PORT 3306
 
 void bmysql_connect();
+
+static void _error(const char* err)
+{
+	printf("mysql error:%s\n", err);
+}
 
 static void bmysql_prepare()
 {
@@ -37,6 +41,80 @@ void bmysql_connect()
 	}
 }
 
+/**
+ * 执行非查询语句
+ * @param query 被执行的语句
+ * @return 返回受影响的行数
+ */
+int bmysql_execute(const char* query)
+{
+	bmysql_prepare();
+
+	MYSQL_RES *result;
+	unsigned int num_rows = 0;
+
+	 
+	if (mysql_query(&mysql,query)) // error
+	{
+		_error(mysql_error(&mysql));
+	}
+	else // query succeeded, process any data returned by it
+	{
+		result = mysql_store_result(&mysql);
+		
+		if (mysql_errno(&mysql))
+		{
+			_error(mysql_error(&mysql));
+		}
+		else if (mysql_field_count(&mysql) == 0)
+		{
+			// query does not return data
+			// (it was not a SELECT)
+			num_rows = mysql_affected_rows(&mysql);
+		}
+	}
+	
+	return num_rows;
+}
+
+MYSQL_RES* bmysql_query(const char* query)
+{
+	bmysql_prepare();
+
+	MYSQL_RES* result = NULL;
+	 
+	if (mysql_query(&mysql,query))
+	{
+		_error(mysql_error(&mysql));
+	}
+	else // query succeeded, process any data returned by it
+	{
+		result = mysql_store_result(&mysql);
+		
+		if (!result && mysql_errno(&mysql))
+		{
+		   _error(mysql_error(&mysql));
+		}
+	}
+	
+	return result;
+}
+
+MYSQL_RES* bmysql_query_scalar(const char* query, char** v)
+{
+	MYSQL_RES* result = bmysql_query(query);
+	MYSQL_ROW row;
+	
+	while ((row = mysql_fetch_row(result)))
+	{
+		*v = row[0];
+		break;
+	}
+	
+	return result;
+}
+
+/*
 void bmysql_query(const char* query)
 {
 	bmysql_prepare();
@@ -85,6 +163,5 @@ void bmysql_query(const char* query)
 			}
 		}
 	}
-
-
 }
+*/
