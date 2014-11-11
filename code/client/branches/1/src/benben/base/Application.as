@@ -26,6 +26,7 @@ package benben.base
 		private var _loading:Loading;
 		private var _defaultView:String = "loading";
 		private var _charset:String = "utf-8";
+		private var _message:Message;
 		
 		public function Application(stage:Sprite, config:Object)
 		{
@@ -66,6 +67,7 @@ package benben.base
 			components["assetsLoader"] = {"classname":benben.net.AssetsLoader};
 			components["viewManager"] = {"classname":benben.base.ViewManager, "stage":_stage};
 			components["connector"] = {"classname":benben.net.connectors.SocketConnector};
+			components["message"] = {"classname":benben.base.Message};
 			
 			registerComponents(components);
 		}
@@ -172,6 +174,9 @@ package benben.base
 			_charset = value;
 		}
 
-		
+		public function get message():Message
+		{
+			return getComponent("message") as Message;
+		}
 	}
 }

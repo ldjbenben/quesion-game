@@ -5,41 +5,43 @@
 
 void controller_user_login(bmessage* pMsg)
 {
-
+	printf("user_login\n");
 	bresponse response = {0};
-	socket_write_int(&response, 3);
-	socket_flush(pMsg, &response);
-
-/*
 	trans_str_size_t len = TRANS_STR_LEN;
 	char pwd[TRANS_STR_LEN] = {0};
 	int uid = 0;
-	char sql[1000] = {0};
+	char sql[200] = {0};
 	char* username = NULL;
-	///char username[50] = {0};
 	
 	uid = socket_read_int(pMsg);
 	socket_read_string(pMsg, pwd, &len);
 	
-	snprintf(sql, 9999, "select `username` from `qgame_users` where `uid`=%d and `password`=\"%s\"", uid, pwd);
+	snprintf(sql, 199, "select `username` from `qgame_users` where `uid`=%d and `password`=\"%s\"", uid, pwd);
 	
-	MYSQL_RES* result = bmysql_query_scalar(sql, &username);
-	
+	BMYSQL_RES* bresult = bmysql_query_scalar(sql, &username);
+	printf("user login bresult->id:%d\n", bresult->id);
+	if(bresult->id == 0)
+	{
+		printf("sleeping...\n");
+		sleep(10);
+	}
+	if(bresult->id == 0)
+	{
+		printf("wake up\n");
+	}
 	if(username == NULL)
 	{
-		
+		response.code = ERROR_USER_LOGIN_FAIL;
 	}
-	socket_write_string(pMsg, username, strlen(username));
-	
-	mysql_free_result(result);
-	
-	
-	//bmysql_execute("insert qgame_users(`username`,`password`)values(\"ldj\",\"09cca18a30bc34727b0254943811239a\")");
-	
-	socket_write_int(pMsg, uid);
-	socket_write_string(pMsg, pwd, len);
-	socket_flush(pMsg);
-	*/
+	else
+	{
+		socket_write_string(&response, username, strlen(username));
+		socket_write_int(&response, uid);
+		socket_write_string(&response, pwd, len);
+	}
+
+	socket_flush(pMsg, &response);
+	bmysql_free_result(bresult);
 }
 
 void controller_user_list(bmessage* pMsg)

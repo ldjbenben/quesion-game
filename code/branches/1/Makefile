@@ -2,7 +2,7 @@ VERSION =
 EXE = main$(VERSION)
 objects = $(EXE).o bsocket.o connection.o bmysql.o user.o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 CC = gcc
-CFLAGS = -Wall -Werror -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./include
+CFLAGS = -Wall -Werror -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./include -I /usr/local/mysql/include
 
 $(EXE):$(objects)
 	$(CC) $(CFLAGS) -o $(EXE) $(objects)

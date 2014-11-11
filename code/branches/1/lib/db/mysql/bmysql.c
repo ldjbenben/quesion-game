@@ -1,44 +1,77 @@
 #include "benben.h"
 #include "bmysql.h"
+#include "bmemory.h"
 
-static MYSQL mysql = {{0}};
-static bool init = false;
-static bool connected = false;
-
-#define MYSQL_HOST "192.168.1.101"
-#define MYSQL_USER "root"
-#define MYSQL_PASSWD "root"
-#define MYSQL_DB "qgame"
-#define MYSQL_PORT 3306
-
-void bmysql_connect();
+static bmysql_connector connectors[DB_CONNECTOR_NUM];
+static bmemory_pool_id_t lc_pool_id = 0;
 
 static void _error(const char* err)
 {
 	printf("mysql error:%s\n", err);
 }
 
-static void bmysql_prepare()
+/**
+ * 此函数只能被调用一次
+ */
+void bmysql_init()
 {
-	if(!init)
+	lc_pool_id = bmemory_pool_register(sizeof(BMYSQL_RES), DB_CONNECTOR_NUM, DB_CONNECTOR_NUM);
+	
+	int i = 0;
+	
+	for(i=0; i<DB_CONNECTOR_NUM; i++)
 	{
-		if(connected == true)
+		if(mysql_real_connect(&connectors[i].mysql, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, MYSQL_PORT, NULL, 0) == NULL)
 		{
-			mysql_ping(&mysql);
+			connectors[i].status = 2;
+			_error(mysql_error(&connectors[i].mysql));
 		}
 		else
 		{
-			bmysql_connect();
+			connectors[i].status = 0;
 		}
 	}
 }
 
-void bmysql_connect()
+void bmysql_destroy()
 {
-	if(mysql_real_connect(&mysql, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, MYSQL_PORT, NULL, 0) == NULL)
+	int i = 0;
+	for(i=0; i<DB_CONNECTOR_NUM; i++)
 	{
-		err_quit("connect mysql error!\n");
+		mysql_close(&connectors[i].mysql);
 	}
+}
+
+/**
+ * 获取一个数据库连接指针。
+ * 如果当前连接池中没有闲置的连接可供使用，此函数将会等待
+ * 直到有闲置的连接可供使用或超时为止。
+ * @param id [out] 返回连接标识，释放连接(db_release_connector)时会使用到
+ */
+static MYSQL* bmysql_get_connector(int* id)
+{
+	int i=0;
+
+	for(i=0; i<DB_CONNECTOR_NUM; i++)
+	{
+		if(connectors[i].status == 0)
+		{
+			*id = i;
+			connectors[i].status = 1;
+			return &connectors[i].mysql;
+		}
+	}
+	return NULL;
+}
+
+/**
+ * 释放数据库连接
+ * 把此连接调整为可使用状态
+ * @param id 连接标识,通过db_get_connector的id参数进行返回
+ */
+static void release_connector(int id)
+{
+	connectors[id].status = 0;
 }
 
 /**
@@ -48,120 +81,94 @@ void bmysql_connect()
  */
 int bmysql_execute(const char* query)
 {
-	bmysql_prepare();
+	int id;
+	MYSQL* mysql = bmysql_get_connector(&id);
 
-	MYSQL_RES *result;
+	MYSQL_RES* result = NULL;
+
 	unsigned int num_rows = 0;
 
-	 
-	if (mysql_query(&mysql,query)) // error
+	if (mysql_query(mysql,query)) // error
 	{
-		_error(mysql_error(&mysql));
+		_error(mysql_error(mysql));
 	}
 	else // query succeeded, process any data returned by it
 	{
-		result = mysql_store_result(&mysql);
+		result = mysql_store_result(mysql);
 		
-		if (mysql_errno(&mysql))
+		if(result != 0) // 执行了查询语句, 释放资源
 		{
-			_error(mysql_error(&mysql));
+			mysql_free_result(result);
 		}
-		else if (mysql_field_count(&mysql) == 0)
+		else
 		{
-			// query does not return data
-			// (it was not a SELECT)
-			num_rows = mysql_affected_rows(&mysql);
+		
+			if (mysql_errno(mysql))
+			{
+				_error(mysql_error(mysql));
+			}
+			else if (mysql_field_count(mysql) == 0)
+			{
+				// query does not return data
+				// (it was not a SELECT)
+				num_rows = mysql_affected_rows(mysql);
+			}
 		}
 	}
+	
+	release_connector(id);
 	
 	return num_rows;
 }
 
-MYSQL_RES* bmysql_query(const char* query)
+BMYSQL_RES* bmysql_query(const char* query)
 {
-	bmysql_prepare();
+	int id;
+	MYSQL* mysql = bmysql_get_connector(&id);
 
 	MYSQL_RES* result = NULL;
+	BMYSQL_RES* bresult = NULL;
 	 
-	if (mysql_query(&mysql,query))
+	if (mysql_query(mysql,query))
 	{
-		_error(mysql_error(&mysql));
+		_error(mysql_error(mysql));
 	}
 	else // query succeeded, process any data returned by it
 	{
-		result = mysql_store_result(&mysql);
+		result = mysql_store_result(mysql);
 		
-		if (!result && mysql_errno(&mysql))
+		if (!result && mysql_errno(mysql))
 		{
-		   _error(mysql_error(&mysql));
+		   _error(mysql_error(mysql));
 		}
+		
+		bresult = (BMYSQL_RES*)bmemory_get(lc_pool_id, 1);
+		bresult->result = result;
+		bresult->mysql = mysql;
+		bresult->id = id;
 	}
 	
-	return result;
+	return bresult;
 }
 
-MYSQL_RES* bmysql_query_scalar(const char* query, char** v)
+BMYSQL_RES* bmysql_query_scalar(const char* query, char** v)
 {
-	MYSQL_RES* result = bmysql_query(query);
+	BMYSQL_RES* bresult = bmysql_query(query);
 	MYSQL_ROW row;
 	
-	while ((row = mysql_fetch_row(result)))
+	while ((row = mysql_fetch_row(bresult->result)))
 	{
 		*v = row[0];
+		bresult = (BMYSQL_RES*)bmemory_get(lc_pool_id, 1);
 		break;
 	}
-	
-	return result;
+	return bresult;
 }
 
-/*
-void bmysql_query(const char* query)
+void bmysql_free_result(BMYSQL_RES* bresult)
 {
-	bmysql_prepare();
-
-	MYSQL_RES *result;
-	MYSQL_ROW row;
-	unsigned int num_fields;
-	unsigned int num_rows;
-	unsigned int i;
-
-	 
-	if (mysql_query(&mysql,query))
-	{
-		// error
-	}
-	else // query succeeded, process any data returned by it
-	{
-		result = mysql_store_result(&mysql);
-		if (result)  // there are rows
-		{
-			num_fields = mysql_num_fields(result);
-			while ((row = mysql_fetch_row(result)))
-			{
-			   unsigned long *lengths;
-			   lengths = mysql_fetch_lengths(result);
-			   for(i = 0; i < num_fields; i++)
-			   {
-				   printf("[%.*s] ", (int) lengths[i], row[i] ? row[i] : "NULL");
-			   }
-			   printf("\n");
-			}
-			mysql_free_result(result);
-			// retrieve rows, then call mysql_free_result(result)
-		}
-		else  // mysql_store_result() returned nothing; should it have?
-		{
-			if (mysql_errno(&mysql))
-			{
-			   fprintf(stderr, "Error: %s\n", mysql_error(&mysql));
-			}
-			else if (mysql_field_count(&mysql) == 0)
-			{
-				// query does not return data
-				// (it was not a SELECT)
-				num_rows = mysql_affected_rows(&mysql);
-			}
-		}
-	}
+	printf("bresult->id:%d\n", bresult->id);
+	mysql_free_result(bresult->result);
+	release_connector(bresult->id);
+	bmemory_free(lc_pool_id, bresult);
 }
-*/

@@ -9,6 +9,7 @@ extern int g_client_fds[];
 fd_set rfds;
 
 
+
 static bmessage* _create_message(int connfd, char* data);
 
 void thread_message_init()
@@ -74,7 +75,7 @@ void* thread_recv(void* arg)
 				}
 				else if(len > 0)
 				{
-					message_queue_push(_create_message(g_client_fds[i], buf));
+					message_queue_push(_create_message(g_client_fds[i], buf));	
 				}	
 			}
 		}
@@ -98,8 +99,6 @@ static bmessage* _create_message(int connfd, char* data)
 	msg->header.client_context_id = ntohl(msg->header.client_context_id);
 	msg->header.len = ntohl(msg->header.len);
 	msg->conn = conn;
-	
-	printf("%d\t%d\t%d\t\n", msg->header.id, msg->header.client_context_id, msg->header.len);
 	
 	return msg;
 }

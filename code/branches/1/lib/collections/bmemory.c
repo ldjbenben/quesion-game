@@ -61,6 +61,34 @@ bmemory_pool_id_t bmemory_pool_register(bmemory_unit_size_t unitSize, bmemory_si
 	return id+1;
 }
 
+/**
+ * 返注册内存池
+ * 程序会释放掉此内存池所占用的内存空间
+ * @param bmemory_pool_id_t id 内存池标识
+ * @return void
+ */
+void bmemory_pool_unregister(bmemory_pool_id_t id)
+{
+	bmemory_pool* pPool = get_bmemory_pool(id);
+	
+	if(pPool == NULL)
+	{
+		return;
+	}
+	
+	bmemory_block* block = pPool->pBlockHeader;
+	bmemory_block* tmp = block;
+
+	while(block != NULL)
+	{
+		tmp = block;
+		block = block->pNext;
+		free(tmp->pMemory);
+	}
+	
+	memset(pPool, 0, sizeof(bmemory_pool));
+}
+
 static void* bmemory_find(bmemory_pool* pPool, bmemory_size_t num)
 {	
 	// 查找空闲内存单元
@@ -406,34 +434,6 @@ void bmemory_lake_destroy(void)
 	{
 		bmemory_pool_unregister(i);
 	}
-}
-
-/**
- * 返注册内存池
- * 程序会释放掉此内存池所占用的内存空间
- * @param bmemory_pool_id_t id 内存池标识
- * @return void
- */
-void bmemory_pool_unregister(bmemory_pool_id_t id)
-{
-	bmemory_pool* pPool = get_bmemory_pool(id);
-	
-	if(pPool == NULL)
-	{
-		return;
-	}
-	
-	bmemory_block* block = pPool->pBlockHeader;
-	bmemory_block* tmp = block;
-
-	while(block != NULL) 
-	{
-		tmp = block;
-		block = block->pNext;
-		free(tmp->pMemory);
-	}
-	
-	memset(pPool, 0, sizeof(bmemory_pool));
 }
 
 /**

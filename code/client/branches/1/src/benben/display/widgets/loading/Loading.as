@@ -1,7 +1,6 @@
 package benben.display.widgets.loading
 {
 	import benben.display.widgets.IWidget;
-	import benben.display.widgets.Widget;
 	import benben.net.IAssetsLoading;
 	
 	import flash.display.Bitmap;
@@ -9,8 +8,6 @@ package benben.display.widgets.loading
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
 	public class Loading extends Sprite implements IAssetsLoading, IWidget

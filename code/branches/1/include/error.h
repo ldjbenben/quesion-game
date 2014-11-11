@@ -1,0 +1,1 @@
+#define ERROR_USER_LOGIN_FAIL 1000

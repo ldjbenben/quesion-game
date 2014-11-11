@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<messages>
+	<!-- id大于1000系统级错误 -->
+	<!-- id在1000至5000为用户自定义错误码 -->
+	<!-- id大于5000为普通消息 -->
+	<item id="1000" value="用户登录失败！" />
+	<item id="1001" value="金币不足！" />
+</messages>

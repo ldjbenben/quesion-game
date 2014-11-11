@@ -1,15 +1,16 @@
 package benben.net
 {
 	import benben.base.Component;
-	import benben.display.widgets.loading.Loading;
 	import benben.events.AssetsProgressEvent;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
-	import flash.utils.getDefinitionByName;
 
 	public class AssetsLoader extends Component
 	{
@@ -54,9 +55,8 @@ package benben.net
 				
 				for each(var item:XML in data.item)
 				{
-					_queue.push({"id":String(item.@id), "title":String(item.@title), "uri":String(item.@uri), "delay":Boolean(String(item.@delay))});
+					_queue.push({"id":String(item.@id), "type":String(item.@type), "title":String(item.@title), "uri":String(item.@uri), "delay":Boolean(String(item.@delay))});
 				}
-				
 				loadFile();
 				
 			});
@@ -111,11 +111,43 @@ package benben.net
 		 */
 		private function loadFile():void
 		{
+			switch(_queue[_index].type)
+			{
+				case "xml":
+					loadXml();
+					break;
+				default:
+					loadImg();
+					break;
+			}
+		}
+		
+		private function loadImg():void
+		{
+			var loader:Loader = new Loader;
+			var request:URLRequest = new URLRequest(_queue[_index].uri);
+			
+			loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onLoadFileProgress);
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(evt:Event):void{
+				var key:String = _queue[_index++].id;
+				_assets[key] = evt.target.content;
+				fileLoadComplete();
+			});
+			
+			loader.load(request);
+		}
+		
+		private function loadXml():void
+		{
 			var loader:URLLoader = new URLLoader();
 			var request:URLRequest = new URLRequest(_queue[_index].uri);
 			
 			loader.addEventListener(ProgressEvent.PROGRESS, onLoadFileProgress);
-			loader.addEventListener(Event.COMPLETE, onLoadFileComplete);
+			loader.addEventListener(Event.COMPLETE, function(evt:Event):void{
+				var key:String = _queue[_index++].id;
+				_assets[key] = evt.target.data;
+				fileLoadComplete();
+			});
 			
 			loader.load(request);
 		}
@@ -133,11 +165,8 @@ package benben.net
 			dispatchEvent(newEvent);
 		}
 		
-		private function onLoadFileComplete(evt:Event):void
+		private function fileLoadComplete():void
 		{
-			var key:String = _queue[_index++].id;
-			_assets[key] = evt.target.data;
-			
 			if(_index < _queue.length)
 			{
 				var newEvent:AssetsProgressEvent = new AssetsProgressEvent(AssetsProgressEvent.ONE_START);
@@ -164,6 +193,20 @@ package benben.net
 		{
 			_assetsFile = value;
 		}
-
+		
+		public function getXml(id:String):XML
+		{
+			return new XML(_assets[id]);
+		}
+		
+		public function getImg(id:String):Bitmap
+		{
+			return null;
+		}
+		
+		public function getSwf(id:String):Bitmap
+		{
+			return null;
+		}
 	}
 }

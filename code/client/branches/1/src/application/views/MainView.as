@@ -48,7 +48,7 @@ package application.views
 		{
 			//removeChild(_startButton);
 			//run();
-			Benben.app.connector.addParam("uid", 3, TransferDataType.INT);
+			Benben.app.connector.addParam("uid", 1, TransferDataType.INT);
 			Benben.app.connector.addParam("pwd", "09cca18a30bc34727b0254943811239a", TransferDataType.STRING);
 			Benben.app.connector.request("userLogin", testResponse);
 			/*

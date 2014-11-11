@@ -11,9 +11,7 @@ char* socket_read_string(bmessage* pMsg, char* recv, trans_str_size_t* len)
 {
 	void* p = ( (void*)(pMsg->data) ) + pMsg->read_cursor;
 	*len = ntohs(*(trans_str_size_t*)p);
-	printf("str len:%d\n", *len);
 	memcpy(recv, p + sizeof(trans_str_size_t), *len);
-	
 	pMsg->read_cursor += sizeof(trans_str_size_t) + *len;
 	
 	return recv;
@@ -51,10 +49,10 @@ void socket_flush(bmessage* msg, bresponse* response)
 	int cursor = 0;
 	char data[MAX_TEXT] = {0};
 	
-	*(int*)data = msg->header.client_context_id;
+	*(int*)data = htonl(msg->header.client_context_id);
 	cursor += sizeof(int);
 	
-	*(int*)( (void*)data + cursor ) = response->code;
+	*(int*)( (void*)data + cursor ) = htonl(response->code);
 	cursor += sizeof(int);
 	
 	memcpy((void*)data + cursor, response->data, response->cursor);

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-blist_t lc_blists[BLIST_MAX_NUM] = {{0}};
-bmemory_pool_id_t lc_pool_id = 0;
+static blist_t lc_blists[BLIST_MAX_NUM] = {{0}};
+static bmemory_pool_id_t lc_pool_id = 0;
 
 static blist_t* get_blist(blist_id_t);
 

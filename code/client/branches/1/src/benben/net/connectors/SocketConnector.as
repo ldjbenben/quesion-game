@@ -1,5 +1,10 @@
 package benben.net.connectors
 {
+	import application.config.ApiConfig;
+	
+	import benben.base.Component;
+	import benben.net.TransferDataType;
+	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -7,11 +12,6 @@ package benben.net.connectors
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	
-	import application.config.ApiConfig;
-	
-	import benben.base.Component;
-	import benben.net.TransferDataType;
 
 	public class SocketConnector extends Component implements IConnector
 	{
@@ -140,16 +140,24 @@ package benben.net.connectors
 			_bytesNum = 0;
 		}
 		
-		private function socketDataHandler(event:ProgressEvent):void 
+		protected function socketDataHandler(event:ProgressEvent):void 
 		{
 			var msgId:int = _socket.readInt();
+			var bytes:ByteArray = new ByteArray();
+			_socket.readBytes(bytes);
 			
-			if(_callbackMap.hasOwnProperty(msgId))
+			if(beforeCallback(bytes))
 			{
-				var bytes:ByteArray = new ByteArray();
-				_socket.readBytes(bytes);
-				_callbackMap[msgId](bytes);
+				if(_callbackMap.hasOwnProperty(msgId))
+				{
+					_callbackMap[msgId](bytes);
+				}
 			}
+		}
+		
+		protected function beforeCallback(bytes:ByteArray):Boolean
+		{
+			return true;
 		}
 		
 		private function closeHandler(event:Event):void

@@ -1,10 +1,13 @@
 #include "benben.h"
 #include "unpthread.h"
 #include "connection.h"
+#include "bmysql.h"
+#include "bmemory.h"
 
 void sig_int(int signo);
 void* thread_recv(void*);
 void* thread_message_consume(void*);
+static void application_init();
 
 int	g_client_fds[MAX_CLIENT];
 pthread_t thread_recv_tid; 
@@ -26,13 +29,12 @@ int main(int argc, char** argv)
 		listenfd = Tcp_listen(argv[1], argv[2], &addrlen);
 	}
 	
+	application_init();
+	
 	// 创建message线程
 	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);
+	sleep(1);
 	Pthread_create(&thread_message_consume_tid, NULL, &thread_message_consume, NULL);
-	
-	Signal(SIGINT, sig_int);
-	connection_hashmap_init();
-	//bmysql_query("select * from qgame_users");
 	
 	int i=0;
 
@@ -70,7 +72,21 @@ int main(int argc, char** argv)
 	}
 }
 
+static void application_init()
+{
+	Signal(SIGINT, sig_int);
+	connection_hashmap_init();
+	bmysql_init();
+}
+
+static void application_destroy()
+{
+	bmysql_destroy();
+	bmemory_lake_destroy();
+}
+
 void sig_int(int signo)
 {
+	application_destroy();
 	exit(0);
 }
