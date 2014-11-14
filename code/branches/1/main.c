@@ -1,8 +1,8 @@
 #include "benben.h"
-#include "unpthread.h"
 #include "connection.h"
 #include "bmysql.h"
 #include "bmemory.h"
+#include "bthreads.h"
 
 void sig_int(int signo);
 void* thread_recv(void*);
@@ -29,12 +29,9 @@ int main(int argc, char** argv)
 		listenfd = Tcp_listen(argv[1], argv[2], &addrlen);
 	}
 	
-	application_init();
+	Signal(SIGINT, sig_int);
 	
-	// 创建message线程
-	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);
-	sleep(1);
-	Pthread_create(&thread_message_consume_tid, NULL, &thread_message_consume, NULL);
+	application_init();
 	
 	int i=0;
 
@@ -74,9 +71,12 @@ int main(int argc, char** argv)
 
 static void application_init()
 {
-	Signal(SIGINT, sig_int);
-	connection_hashmap_init();
+	model_connection_init();
 	bmysql_init();
+	// 创建message线程
+	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);
+	sleep(1);
+	threadpool_message_consume_init();
 }
 
 static void application_destroy()

@@ -142,16 +142,11 @@ Pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr)
 	err_sys("pthread_cond_wait error");
 }
 
-void
+int
 Pthread_cond_timedwait(pthread_cond_t *cptr, pthread_mutex_t *mptr,
 					   const struct timespec *tsptr)
 {
-	int		n;
-
-	if ( (n = pthread_cond_timedwait(cptr, mptr, tsptr)) == 0)
-		return;
-	errno = n;
-	err_sys("pthread_cond_timedwait error");
+	return pthread_cond_timedwait(cptr, mptr, tsptr);
 }
 
 void

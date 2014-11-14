@@ -60,5 +60,6 @@ typedef struct bmessage_qpointer_s{
 	bmessage_node* rear;
 }bmessage_qpointer;
 
+
 #endif
 

@@ -11,19 +11,19 @@ void controller_user_login(bmessage* pMsg)
 	int uid = 0;
 	char sql[200] = {0};
 	char* username = NULL;
-	BMYSQL_RES* bresult;
+	BMYSQL_RES* bresult = NULL;
 	int ret = 0;
 	
 	uid = socket_read_int(pMsg);
 	socket_read_string(pMsg, pwd, &len);
 	
 	snprintf(sql, 199, "select `username` from `qgame_users` where `uid`=%d and `password`=\"%s\"", uid, pwd);
-	printf("before bmysql_query_scalar\n");
-	int ret = bmysql_query_scalar(sql, &username, bresult);
+	//printf("before bmysql_query_scalar\n");
+	ret = bmysql_query_scalar(sql, &username, &bresult);
 	
 	if(ret == 0)
 	{
-		printf("user login bresult->id:%d\tpMsg:%p\n", bresult->id, pMsg);
+		//printf("user login bresult->id:%d\tpMsg:%p\n", bresult->id, pMsg);
 
 		if(username == NULL)
 		{

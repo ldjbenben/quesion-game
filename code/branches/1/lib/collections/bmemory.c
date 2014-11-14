@@ -408,7 +408,6 @@ void bmemory_free(bmemory_pool_id_t id, void* data)
 			{
 				unit->pNext = NULL;
 			}
-printf("\n");
 		}
 	}
 }

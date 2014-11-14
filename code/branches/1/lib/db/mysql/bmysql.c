@@ -4,6 +4,8 @@
 
 static bmysql_connector connectors[DB_CONNECTOR_NUM];
 static bmemory_pool_id_t lc_pool_id = 0;
+static pthread_mutex_t lc_mutex;
+static pthread_cond_t lc_cond;
 
 static void _error(const char* err)
 {
@@ -16,6 +18,8 @@ static void _error(const char* err)
 void bmysql_init()
 {
 	lc_pool_id = bmemory_pool_register(sizeof(BMYSQL_RES), DB_CONNECTOR_NUM, DB_CONNECTOR_NUM);
+	pthread_mutex_init(&lc_mutex, NULL);
+	pthread_cond_init(&lc_cond, NULL);
 	
 	int i = 0;
 	
@@ -31,15 +35,40 @@ void bmysql_init()
 			connectors[i].status = 0;
 		}
 	}
+	
 }
 
 void bmysql_destroy()
 {
 	int i = 0;
+	
 	for(i=0; i<DB_CONNECTOR_NUM; i++)
 	{
 		mysql_close(&connectors[i].mysql);
 	}
+	
+	pthread_mutex_destroy(&lc_mutex);
+	pthread_cond_destroy(&lc_cond);
+}
+
+static MYSQL* get_connnector(int* id)
+{
+	MYSQL* mysql = NULL;
+	int i=0;
+	
+	for(i=0; i<DB_CONNECTOR_NUM; i++)
+	{
+		if(connectors[i].status == 0)
+		{
+			*id = i;
+			connectors[i].status = 1;
+			mysql = &connectors[i].mysql;
+			break;
+		}
+	}
+	//printf("i:%d\n", i);
+	
+	return mysql;
 }
 
 /**
@@ -50,18 +79,35 @@ void bmysql_destroy()
  */
 static MYSQL* bmysql_get_connector(int* id)
 {
-	int i=0;
-
-	for(i=0; i<DB_CONNECTOR_NUM; i++)
+	MYSQL* mysql = NULL;
+	
+	Pthread_mutex_lock(&lc_mutex);
+	
+	mysql = get_connnector(id);
+	
+	if(mysql == NULL)
 	{
-		if(connectors[i].status == 0)
+		//printf("mysql wait timeout\n");
+		struct timespec t;
+		struct timeval now;
+		
+		gettimeofday(&now, NULL);
+		t.tv_sec = now.tv_sec + 15;
+		t.tv_nsec = now.tv_usec*1000;
+		
+		int ret = Pthread_cond_timedwait(&lc_cond, &lc_mutex, &t);
+		
+		if(ret != ETIMEDOUT)
 		{
-			*id = i;
-			connectors[i].status = 1;
-			return &connectors[i].mysql;
+			//printf("after mysql wait timeout then get connector again\n");
+			mysql = get_connnector(id);
+			//printf("after mysql wait timeout then get connector succee id:%d\n", *id);
 		}
 	}
-	return NULL;
+	
+	Pthread_mutex_unlock(&lc_mutex);
+
+	return mysql;
 }
 
 /**
@@ -121,54 +167,64 @@ int bmysql_execute(const char* query)
 	return num_rows;
 }
 
-BMYSQL_RES* bmysql_query(const char* query)
+int bmysql_query(const char* query, BMYSQL_RES** bresult)
 {
-	int id;
-	MYSQL* mysql = bmysql_get_connector(&id);
-
+	int ret = 0;
+	int id = 0;
 	MYSQL_RES* result = NULL;
-	BMYSQL_RES* bresult = NULL;
-	 
-	if (mysql_query(mysql,query))
+	MYSQL* mysql = bmysql_get_connector(&id);
+	
+	if(mysql == NULL)
 	{
-		_error(mysql_error(mysql));
+		ret = 1;
 	}
-	else // query succeeded, process any data returned by it
+	else
 	{
-		result = mysql_store_result(mysql);
-		
-		if (!result && mysql_errno(mysql))
+		if (mysql_query(mysql,query))
 		{
-		   _error(mysql_error(mysql));
+			_error(mysql_error(mysql));
 		}
-		
-		bresult = (BMYSQL_RES*)bmemory_get(lc_pool_id, 1);
-		bresult->result = result;
-		bresult->mysql = mysql;
-		bresult->id = id;
+		else // query succeeded, process any data returned by it
+		{
+			result = mysql_store_result(mysql);
+			
+			if (!result && mysql_errno(mysql))
+			{
+			   _error(mysql_error(mysql));
+			}
+
+			*bresult = (BMYSQL_RES*)bmemory_get(lc_pool_id, 1);
+			(*bresult)->result = result;
+			(*bresult)->mysql = mysql;
+			(*bresult)->id = id;
+		}
 	}
 	
-	return bresult;
+	return ret;
 }
 
-BMYSQL_RES* bmysql_query_scalar(const char* query, char** v)
+int bmysql_query_scalar(const char* query, char** v, BMYSQL_RES** bresult)
 {
-	BMYSQL_RES* bresult = bmysql_query(query);
-	MYSQL_ROW row;
+	int ret = bmysql_query(query, bresult);
 	
-	while ((row = mysql_fetch_row(bresult->result)))
+	if(ret == 0)
 	{
-		*v = row[0];
-		bresult = (BMYSQL_RES*)bmemory_get(lc_pool_id, 1);
-		break;
+		MYSQL_ROW row;
+		
+		while ((row = mysql_fetch_row((*bresult)->result)))
+		{
+			*v = row[0];
+			break;
+		}
 	}
-	return bresult;
+	
+	return ret;
 }
 
 void bmysql_free_result(BMYSQL_RES* bresult)
 {
-	printf("bresult->id:%d\n", bresult->id);
 	mysql_free_result(bresult->result);
 	release_connector(bresult->id);
 	bmemory_free(lc_pool_id, bresult);
+	pthread_cond_signal(&lc_cond);
 }

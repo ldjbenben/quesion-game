@@ -51,6 +51,16 @@ void bhashmap_unregister(bhashmap_id_t id);
  */
 void bhashmap_set(bhashmap_id_t id, const char* key, void* value, bhashmap_value_size_t _len);
 /**
+ * 通过整数类型健设置一个键值对
+ * 与bhashmap_set的区别是键的字段类型为整数
+ * @param bhashmap_id_t id bhashmap标识
+ * @param int key 键名
+ * @param bhashmap_value_size_t type_len 值类型长度
+ * @param void* value 值
+ * @return void
+ */
+void bhashmap_iset(bhashmap_id_t id, int key, void* value, bhashmap_value_size_t value_len);
+/**
  * 获取键对应的值
  * @param bhashmap_id_t id bhashmap标识
  * @param const char* key 键名

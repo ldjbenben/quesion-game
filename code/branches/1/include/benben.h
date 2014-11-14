@@ -5,6 +5,7 @@
 
 #include "error.h"
 #include "unp.h"
+#include "unpthread.h"
 #include "type.h"
 
 #define SENDBUF_RESERVED_SPACE 4;

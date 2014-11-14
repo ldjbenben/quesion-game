@@ -5,9 +5,20 @@
 extern pthread_mutex_t message_mutex;
 extern pthread_cond_t message_consume_cond;
 
-void thread_message_consume_init()
+#define THREAD_MESSAGE_CONSUME_COUNT 10 // 线程数量
+
+static pthread_t lc_threads[THREAD_MESSAGE_CONSUME_COUNT];
+static void* thread_message_consume(void* arg);
+
+
+void threadpool_message_consume_init()
 {
+	int i = 0;
 	
+	for(i=0; i<THREAD_MESSAGE_CONSUME_COUNT; i++)
+	{
+		Pthread_create(&lc_threads[i], NULL, &thread_message_consume, NULL);
+	}
 }
 
 void thread_message_consume_destory()
@@ -15,7 +26,7 @@ void thread_message_consume_destory()
 
 }
 
-void* thread_message_consume(void* arg)
+static void* thread_message_consume(void* arg)
 {
 	bmessage* pMsg;
 	

@@ -17,6 +17,7 @@
 #include	<unistd.h>
 #include	<sys/wait.h>
 #include	<sys/un.h>		/* for Unix domain sockets */
+#include 	<sys/time.h>
 #include 	<pthread.h>
 
 /* Following could be derived from SOMAXCONN in <sys/socket.h>, but many

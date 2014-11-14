@@ -21,7 +21,7 @@ void	Pthread_mutex_unlock(pthread_mutex_t *);
 void	Pthread_cond_broadcast(pthread_cond_t *);
 void	Pthread_cond_signal(pthread_cond_t *);
 void	Pthread_cond_wait(pthread_cond_t *, pthread_mutex_t *);
-void	Pthread_cond_timedwait(pthread_cond_t *, pthread_mutex_t *,
+int	Pthread_cond_timedwait(pthread_cond_t *, pthread_mutex_t *,
 							   const struct timespec *);
 
 void	Pthread_key_create(pthread_key_t *, void (*)(void *));

@@ -4,7 +4,7 @@
 #include "mysql.h"
 
 #ifndef DB_CONNECTOR_NUM
-#define DB_CONNECTOR_NUM 10
+#define DB_CONNECTOR_NUM 2
 #endif
 
 typedef struct bmysql_connector_t{
@@ -23,8 +23,8 @@ void bmysql_init();
 void bmysql_destroy();
 void bmysql_free_result(BMYSQL_RES* bresult);
 
-BMYSQL_RES* bmysql_query(const char* query);
-BMYSQL_RES* bmysql_query_scalar(const char* query, char** v);
+int bmysql_query(const char* query, BMYSQL_RES** bresult);
+int bmysql_query_scalar(const char* query, char** v, BMYSQL_RES** bresult);
 int bmysql_execute(const char* query);
 
 

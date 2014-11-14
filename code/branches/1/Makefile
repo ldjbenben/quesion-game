@@ -1,37 +1,40 @@
 VERSION =
 EXE = main$(VERSION)
-objects = $(EXE).o bsocket.o connection.o bmysql.o user.o bmemory.o bqueue.o bhashmap.o message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+OBJECTS = $(EXE).o bsocket.o model_connection.o bmysql.o controller_user.o bmemory.o bqueue.o bhashmap.o model_message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+INCLUDE_DIR =  -I ./include -I ./application/include -I /usr/local/mysql/include
+LIB_DIR =  -L /usr/local/mysql/lib
+LIBS =  -lpthread -lmysqlclient
 CC = gcc
-CFLAGS = -Wall -Werror -g -lpthread -lmysqlclient -L /usr/local/mysql/lib -I ./include -I /usr/local/mysql/include
+CFLAGS = -Wall -Werror -g $(LIBS) $(LIB_DIR) $(INCLUDE_DIR)
 
-$(EXE):$(objects)
-	$(CC) $(CFLAGS) -o $(EXE) $(objects)
+$(EXE):$(OBJECTS)
+	$(CC) $(CFLAGS) -o $(EXE) $(OBJECTS)
 	
 $(EXE).o:$(EXE)$(VERSION).c
 	$(CC) $(CFLAGS) -c $(EXE)$(VERSION).c
 bsocket.o:./lib/bsocket.c
 	$(CC) $(CFLAGS) -c ./lib/bsocket.c -I ./include
 	
-bmysql.o:./lib/db/mysql/bmysql.c
+wrappthread.o:./lib/wrappthread.c ./include/unpthread.h
+	$(CC) $(CFLAGS) -c ./lib/wrappthread.c
+	
+bmysql.o:./lib/db/mysql/bmysql.c wrappthread.o
 	$(CC) $(CFLAGS) -c ./lib/db/mysql/bmysql.c -I /usr/local/mysql/include -I ./include
+
+model_message.o:./application/models/model_message.c ./application/include/model.h
+	$(CC) $(CFLAGS) -c ./application/models/model_message.c
 	
-connection.o:./application/collections/connection.c ./include/connection.h
-	$(CC) $(CFLAGS) -c ./application/collections/connection.c
+model_connection.o:./application/models/model_connection.c ./application/include/model.h
+	$(CC) $(CFLAGS) -c ./application/models/model_connection.c
 	
-user.o:./application/controllers/user.c
-	$(CC) $(CFLAGS) -c ./application/controllers/user.c -I /usr/local/mysql/include
+controller_user.o:./application/controllers/controller_user.c ./application/include/controller.h
+	$(CC) $(CFLAGS) -c ./application/controllers/controller_user.c -I /usr/local/mysql/include
 	
 thread_recv.o:./application/threads/thread_recv.c
 	$(CC) $(CFLAGS) -c ./application/threads/thread_recv.c
 	
 thread_message_consume.o:./application/threads/thread_message_consume.c
 	$(CC) $(CFLAGS) -c ./application/threads/thread_message_consume.c
-
-message.o:./application/collections/message.c ./include/message.h
-	$(CC) $(CFLAGS) -c ./application/collections/message.c
-	
-wrappthread.o:./lib/wrappthread.c ./include/unpthread.h
-	$(CC) $(CFLAGS) -c ./lib/wrappthread.c
 
 bmemory.o:./lib/collections/bmemory.c ./include/bmemory.h
 	$(CC) $(CFLAGS) -c ./lib/collections/bmemory.c
@@ -79,4 +82,4 @@ signal.o:./lib/signal.c ./include/unp.h
 	$(CC) $(CFLAGS) -c ./lib/signal.c
 
 clean:
-	rm $(objects)
+	rm $(OBJECTS)

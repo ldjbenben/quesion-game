@@ -128,6 +128,14 @@ void bhashmap_set(bhashmap_id_t id, const char* key, void* value, bhashmap_value
 	entry->value = memcpy(bmemory_get(lc_pool_id_value, value_len), value , value_len);
 }
 
+void bhashmap_iset(bhashmap_id_t id, int key, void* value, bhashmap_value_size_t value_len)
+{
+	char str[16] = {0};
+	itoa(key, str, 10);
+	key[15] = 0;
+	bhashmap_set(id, str, value, value_len);
+}
+
 void* bhashmap_get(bhashmap_id_t id, const char* key)
 {
 	bhashmap_t* bhashmap = _get_bhashmap(id);
