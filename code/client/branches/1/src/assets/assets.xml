@@ -2,6 +2,10 @@
 
 <assets>
 	<item id="1" type="xml" uri="./assets/xml/messages.xml?v=5"  title="messages" delay="true" />
+	<item id="loginWindow" type="swf" uri="./assets/swf/login.swf?v=1"  title="登录框" />
+	<item id="HallUiRes" type="swf" uri="./assets/swf/HallUiRes.swf?v=4"  title="大厅素材包" />
+	
+	<!-- 
 	<item id="2" type="img" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=5"  title="bg_32" />
 	<item id="3" type="img" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=5"  title="bg_33" />
 	<item id="4" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=5"  title="bg_34" />
@@ -22,4 +26,5 @@
 	<item id="19" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_5001.jpg?v=19"  title="bg_3064"/>
 	<item id="20" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_6001.jpg?v=110"  title="bg_3605"/>
 	<item id="21" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_1001.jpg?v=110"  title="bg_3605"/>
+	 -->
 </assets>

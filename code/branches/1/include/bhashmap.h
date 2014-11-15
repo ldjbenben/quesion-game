@@ -69,6 +69,14 @@ void bhashmap_iset(bhashmap_id_t id, int key, void* value, bhashmap_value_size_t
  */
 void* bhashmap_get(bhashmap_id_t id, const char* key);
 /**
+ * 通过整数类型健获取键对应的值
+ * @param bhashmap_id_t id bhashmap标识
+ * @param int key 键名
+ * @param bhashmap_value_size_t type_len 值类型长度
+ * @return void* 如果对应的键不存在返回NULL
+ */
+void* bhashmap_iget(bhashmap_id_t id, int key);
+/**
  * 删除键值对
  * @param bhashmap_id_t id bhashmap标识
  * @param const char* key 键名

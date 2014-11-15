@@ -1,6 +1,7 @@
 package benben
 {
 	import benben.base.Application;
+	import benben.base.Stage;
 	
 	import flash.display.Sprite;
 
@@ -21,7 +22,7 @@ package benben
 		 * @param stage 舞台实例
 		 * @param configFile xml配置文件位置
 		 */
-		public static function createApplication(stage:Sprite, config:Object):Application
+		public static function createApplication(stage:Stage, config:Object):Application
 		{
 			if(null === _app)
 			{

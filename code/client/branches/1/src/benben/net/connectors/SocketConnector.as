@@ -131,6 +131,7 @@ package benben.net.connectors
 			
 			_socket.writeBytes(_bytes);
 			_socket.flush();
+			_bytes.clear();
 			reset();
 		}
 		

@@ -63,8 +63,8 @@ package application.views
 		
 		private function testResponse(bytes:ByteArray):void
 		{
-			var code:int = bytes.readInt();
-			var a:int = bytes.readInt();
+			//var code:int = bytes.readInt();
+			//var a:int = bytes.readInt();
 			//trace("username:"+bytes.readUTF()+" uid:"+bytes.readInt()+" pwd:"+bytes.readUTF());
 			
 			trace("ccada");

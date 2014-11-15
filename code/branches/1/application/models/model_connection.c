@@ -14,20 +14,20 @@ void model_connection_destory()
 	bhashmap_unregister(connection_id);
 }
 
-void connection_hashmap_set(int connfd, bconnection* value)
+void connection_hashmap_set(int connfd, bconnection_t* value)
 {
 	char key[16] = {0};
 	itoa(connfd, key, 10);
 	key[15] = 0;
 	
-	bhashmap_set(connection_id, key, value, sizeof(bconnection));
+	bhashmap_set(connection_id, key, value, sizeof(bconnection_t));
 }
 
-bconnection* connection_hashmap_get(int connfd)
+bconnection_t* connection_hashmap_get(int connfd)
 {
 	char key[16] = {0};
 	itoa(connfd, key, 10);
 	key[15] = 0;
 
-	return (bconnection*)bhashmap_get(connection_id, key);
+	return (bconnection_t*)bhashmap_get(connection_id, key);
 }

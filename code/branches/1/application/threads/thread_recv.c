@@ -10,7 +10,7 @@ fd_set rfds;
 
 
 
-static bmessage* _create_message(int connfd, char* data);
+static bmessage_t* _create_message(int connfd, char* data);
 
 void thread_message_init()
 {
@@ -84,14 +84,14 @@ void* thread_recv(void* arg)
 	return NULL;
 }
 
-static bmessage* _create_message(int connfd, char* data)
+static bmessage_t* _create_message(int connfd, char* data)
 {
 	/* 
 		此处获取了conn的指针，以后的操作也会用到此指针，后期考虑下能否
 		传递过去，以后的相关操作不需要重新获取.
 	*/
-	bconnection* conn = connection_hashmap_get(connfd);
-	bmessage* msg = message_malloc();
+	bconnection_t* conn = connection_hashmap_get(connfd);
+	bmessage_t* msg = message_malloc();
 	
 	memcpy((void*)msg, data, MAX_TEXT);
 	msg->read_cursor = 0;

@@ -1,3 +1,4 @@
+#include "benben.h"
 #include "bhashmap.h"
 #include "bmemory.h"
 #include <stdio.h>
@@ -132,7 +133,7 @@ void bhashmap_iset(bhashmap_id_t id, int key, void* value, bhashmap_value_size_t
 {
 	char str[16] = {0};
 	itoa(key, str, 10);
-	key[15] = 0;
+	str[15] = 0;
 	bhashmap_set(id, str, value, value_len);
 }
 
@@ -153,6 +154,14 @@ void* bhashmap_get(bhashmap_id_t id, const char* key)
 	}
 	
 	return NULL;
+}
+
+void* bhashmap_iget(bhashmap_id_t id, int key)
+{
+	char str[16] = {0};
+	itoa(key, str, 10);
+	str[15] = 0;
+	return bhashmap_get(id, str);
 }
 
 void bhashmap_unset(bhashmap_id_t id, const char* key)

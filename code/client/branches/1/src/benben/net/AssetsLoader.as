@@ -6,6 +6,8 @@ package benben.net
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
+	import flash.display.LoaderInfo;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.net.URLLoader;
@@ -204,8 +206,24 @@ package benben.net
 			return null;
 		}
 		
-		public function getSwf(id:String):Bitmap
+		public function getSwf(id:String):Sprite
 		{
+			return _assets[id];
+		}
+		
+		/**
+		 * 从素材包里取出指定的图片素材
+		 */
+		public function getImgFromPackage(packageId:String, id:String):Sprite
+		{
+			var pk:Sprite = _assets[packageId];
+			
+			if(pk.loaderInfo.applicationDomain.hasDefinition(id) == true)
+			{
+				var define:Class = pk.loaderInfo.applicationDomain.getDefinition(id) as Class;
+				return new define();
+			}
+			
 			return null;
 		}
 	}

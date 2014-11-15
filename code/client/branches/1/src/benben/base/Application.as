@@ -16,7 +16,7 @@ package benben.base
 	public class Application
 	{
 		private var _defaultScene:Class;
-		private var _stage:Sprite;
+		private var _stage:Stage;
 		private var _assetsLoader:AssetsLoader;
 		private var _viewManager:ViewManager;
 		private var _connector:IConnector;
@@ -28,7 +28,7 @@ package benben.base
 		private var _charset:String = "utf-8";
 		private var _message:Message;
 		
-		public function Application(stage:Sprite, config:Object)
+		public function Application(stage:Stage, config:Object)
 		{
 			_componentsConfig = new Dictionary();
 			_components = new Dictionary();
@@ -178,5 +178,11 @@ package benben.base
 		{
 			return getComponent("message") as Message;
 		}
+
+		public function get stage():Stage
+		{
+			return _stage;
+		}
+
 	}
 }

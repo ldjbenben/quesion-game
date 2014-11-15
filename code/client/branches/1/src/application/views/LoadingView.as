@@ -18,7 +18,7 @@ package application.views
 		override public function init():void
 		{
 			_loading = new Loading;
-			_loading.bgFile = "assets/imgs/bg_6001.jpg";
+			_loading.bgFile = "assets/imgs/loading.png";
 			_loading.run();
 			addChild(_loading);
 			
@@ -40,7 +40,7 @@ package application.views
 		private function onLoadAssetsComplete(evt:Event):void
 		{
 			_loading.complete();
-			Benben.app.viewManager.jump("main");
+			Benben.app.viewManager.jump("login");
 		}
 	}
 }

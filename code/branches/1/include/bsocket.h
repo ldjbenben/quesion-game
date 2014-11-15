@@ -14,7 +14,7 @@ byte* read_bytes(int connfd);
 /**
  * 从给定的bmessage结构中读取一整数
  */
-int socket_read_int(bmessage* pMsg);
+int bsocket_read_int(bmessage_t* pMsg);
 /**
  * 从给定的bmessage结构中读取字符串
  
@@ -26,22 +26,22 @@ int socket_read_int(bmessage* pMsg);
  * @param len [in out] recv被填充的最大字符长度，防止溢出操作
  * 程序最后会通过此参数返回最终填充的字节数.
  */
-char* socket_read_string(bmessage* pMsg, char* recv, trans_str_size_t* len);
+char* bsocket_read_string(bmessage_t* pMsg, char* recv, trans_str_size_t* len);
 /**
  * 往给定的bmessage结构中写入一个整数
  */
-void socket_write_int(bresponse* response, int value);
+void bsocket_write_int(bresponse_t* response, int value);
 /**
  * 往给定的bmessage结构中写入一个短整数
  */
-void socket_write_short(bresponse* response, short value);
+void bsocket_write_short(bresponse_t* response, short value);
 /**
  * 往给定的bmessage结构中写入字符串
  * @param str 指向源字符串地址
  * @param len 字符串长度
  */
-void socket_write_string(bresponse* response, const char* str, trans_str_size_t len);
+void bsocket_write_string(bresponse_t* response, const char* str, trans_str_size_t len);
 /**
  * 刷新缓冲发送数据
  */
-void socket_flush(bmessage* msg, bresponse* response);
+void bsocket_flush(bmessage_t* msg, bresponse_t* response);

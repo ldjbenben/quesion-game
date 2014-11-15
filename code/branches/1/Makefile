@@ -1,6 +1,6 @@
 VERSION =
 EXE = main$(VERSION)
-OBJECTS = $(EXE).o bsocket.o model_connection.o bmysql.o controller_user.o bmemory.o bqueue.o bhashmap.o model_message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+OBJECTS = $(EXE).o bsocket.o model_connection.o  model_user.o bmysql.o controller_user.o bmemory.o bqueue.o bhashmap.o model_message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 INCLUDE_DIR =  -I ./include -I ./application/include -I /usr/local/mysql/include
 LIB_DIR =  -L /usr/local/mysql/lib
 LIBS =  -lpthread -lmysqlclient
@@ -23,6 +23,9 @@ bmysql.o:./lib/db/mysql/bmysql.c wrappthread.o
 
 model_message.o:./application/models/model_message.c ./application/include/model.h
 	$(CC) $(CFLAGS) -c ./application/models/model_message.c
+	
+model_user.o:./application/models/model_user.c ./application/include/model.h
+	$(CC) $(CFLAGS) -c ./application/models/model_user.c
 	
 model_connection.o:./application/models/model_connection.c ./application/include/model.h
 	$(CC) $(CFLAGS) -c ./application/models/model_connection.c

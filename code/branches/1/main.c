@@ -3,6 +3,7 @@
 #include "bmysql.h"
 #include "bmemory.h"
 #include "bthreads.h"
+#include "model.h"
 
 void sig_int(int signo);
 void* thread_recv(void*);
@@ -58,7 +59,7 @@ int main(int argc, char** argv)
 		else
 		{
 			g_client_fds[i] = connfd;
-			bconnection conn = {0};
+			bconnection_t conn = {0};
 			conn.fd = connfd;
 			conn.addr = cliaddr;
 			conn.is_auth = false;
@@ -73,6 +74,8 @@ static void application_init()
 {
 	model_connection_init();
 	bmysql_init();
+	model_user_init();
+	
 	// 创建message线程
 	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);
 	sleep(1);
@@ -81,6 +84,7 @@ static void application_init()
 
 static void application_destroy()
 {
+	model_user_destory();
 	bmysql_destroy();
 	bmemory_lake_destroy();
 }

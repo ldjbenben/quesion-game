@@ -28,7 +28,7 @@ void thread_message_consume_destory()
 
 static void* thread_message_consume(void* arg)
 {
-	bmessage* pMsg;
+	bmessage_t* pMsg;
 	
 	while(true)
 	{

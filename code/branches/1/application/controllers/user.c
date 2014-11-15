@@ -3,9 +3,9 @@
 #include "connection.h"
 #include "bmysql.h"
 
-void controller_user_login(bmessage* pMsg)
+void controller_user_login(bmessage_t* pMsg)
 {
-	bresponse response = {0};
+	bresponse_t response = {0};
 	trans_str_size_t len = TRANS_STR_LEN;
 	char pwd[TRANS_STR_LEN] = {0};
 	int uid = 0;
@@ -45,7 +45,7 @@ void controller_user_login(bmessage* pMsg)
 	}
 }
 
-void controller_user_list(bmessage* pMsg)
+void controller_user_list(bmessage_t* pMsg)
 {
 /*
 	struct _params{

@@ -6,6 +6,10 @@
 
 #define TRANS_STR_LEN 254
 
+#ifndef USERNAME_LEN
+#define USERNAME_LEN 30
+#endif
+
 #define false 0
 #define true 1
 
@@ -22,43 +26,48 @@ typedef char byte;
 
 
 
+typedef struct user_s{
+	char username[USERNAME_LEN];
+}user_t;
+
 typedef struct bconnection_s{
 	int fd; // socket id
 	struct sockaddr* addr;
 	bool is_auth; // connection status
-}bconnection;
+	user_t* user;
+}bconnection_t;
 
 typedef struct bresponse_s{
 	//int client_context_id;
 	int code; // 结果码
 	char data[MAX_TEXT];
 	int cursor;
-}bresponse;
+}bresponse_t;
 
 typedef struct bmessage_header_s{
 	int id;
 	int client_context_id;
 	int len;
-}bmessage_header;
+}bmessage_header_t;
 
 typedef struct bmessage_s{
-	bmessage_header header;
+	bmessage_header_t header;
 	char data[MAX_TEXT];
 	int read_cursor;
-	bconnection* conn;
-}bmessage;
+	bconnection_t* conn;
+}bmessage_t;
 
 //typedef message_header  message_element_type;
 
 typedef struct bmessage_node_s{
-	bmessage data;
+	bmessage_t data;
 	struct bmessage_node_s* next;
-}bmessage_node;
+}bmessage_node_t;
 
 typedef struct bmessage_qpointer_s{
-	bmessage_node* front;
-	bmessage_node* rear;
-}bmessage_qpointer;
+	bmessage_node_t* front;
+	bmessage_node_t* rear;
+}bmessage_qpointer_t;
 
 
 #endif
