@@ -12,9 +12,9 @@ package benben.base
 			_data = Benben.app.assetsLoader.getXml(_assetId);
 		}
 		
-		public function getMsg(id:int):String
+		public function getMsg(msgId:int):String
 		{
-			var item:XMLList = _data.item.(@id=1);
+			var item:XMLList = _data.item.@id=msgId;
 			if(item == null)
 			{
 				return 'unknown error!';

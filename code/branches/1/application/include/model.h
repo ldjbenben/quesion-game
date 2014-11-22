@@ -3,7 +3,9 @@
 
 #include "benben.h"
 
-#define ROOM_PLAYER_COUNT 2
+#define ROOM_NUM 100 // 房间数数量
+#define ROOM_TABLE_NUM 50 // 房间桌位数量
+#define TABLE_PLAYER_COUNT 2
 #define ROOM_NAME_LEN 50 // maxinum of room's name length of bytes
 
 #ifndef TABLE_COUNT
@@ -14,9 +16,13 @@ typedef struct game_table_s{
 	char status; // 0:free; 1:waiting; 2:playing
 	int num; // current player count
 	int master; // room master
-	int players[ROOM_PLAYER_COUNT];
+	int players[TABLE_PLAYER_COUNT];
 	char* name[ROOM_NAME_LEN];
 }game_table_t;
+
+typedef struct room_s{
+	game_table_t tables[ROOM_TABLE_NUM];
+}room_t;
 
 void model_connection_init();
 

@@ -47,6 +47,9 @@ static void* thread_message_consume(void* arg)
 				case 2:
 					controller_user_list(pMsg);
 					break;
+				case 100:
+					controller_room_tables(pMsg);
+					break;
 				default:
 					printf("Have not controller %d!\n", pMsg->header.id);
 					break;

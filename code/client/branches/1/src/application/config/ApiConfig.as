@@ -23,6 +23,7 @@ package application.config
 			_data = new Dictionary();
 			
 			_data["userLogin"] = {"id":1};
+			_data["getTables"] = {"id":100};
 		}
 	}
 }

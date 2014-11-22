@@ -9,6 +9,7 @@
 #define MYSQL_HOST "192.168.1.101"
 //#define MYSQL_HOST "192.168.1.148"
 #define MYSQL_USER "root"
+//#define MYSQL_PASSWD "benben"
 #define MYSQL_PASSWD "root"
 #define MYSQL_DB "qgame"
 #define MYSQL_PORT 3306
