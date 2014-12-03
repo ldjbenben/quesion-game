@@ -16,18 +16,17 @@ void model_connection_destory()
 
 void connection_hashmap_set(int connfd, bconnection_t* value)
 {
-	char key[16] = {0};
-	itoa(connfd, key, 10);
-	key[15] = 0;
-	
-	bhashmap_set(connection_id, key, value, sizeof(bconnection_t));
+	bhashmap_iset(connection_id, connfd, value, sizeof(bconnection_t));
 }
 
 bconnection_t* connection_hashmap_get(int connfd)
 {
-	char key[16] = {0};
-	itoa(connfd, key, 10);
-	key[15] = 0;
+	return (bconnection_t*)bhashmap_iget(connection_id, connfd);
+}
 
-	return (bconnection_t*)bhashmap_get(connection_id, key);
+void connection_remove(int connfd)
+{
+	//bconnection_t* conn = bhashmap_iget(connection_id, connfd);
+	Close(connfd);
+	bhashmap_iunset(connection_id, connfd);
 }

@@ -1,0 +1,78 @@
+<NotepadPlus>
+    <Project name="quesion_game">
+        <Folder name="application">
+            <Folder name="collections">
+                <File name="application\collections\connection.c" />
+                <File name="application\collections\message.c" />
+            </Folder>
+            <Folder name="controllers">
+                <File name="application\controllers\controller_hall.c" />
+                <File name="application\controllers\controller_user.c" />
+                <File name="application\controllers\controller_room.c" />
+            </Folder>
+            <Folder name="include">
+                <File name="application\include\controller.h" />
+                <File name="application\include\model.h" />
+            </Folder>
+            <Folder name="models">
+                <File name="application\models\model_connection.c" />
+                <File name="application\models\model_message.c" />
+                <File name="application\models\model_room.c" />
+                <File name="application\models\model_table.c" />
+                <File name="application\models\model_user.c" />
+            </Folder>
+            <Folder name="threads">
+                <File name="application\threads\thread_message.c" />
+                <File name="application\threads\thread_message_consume.c" />
+                <File name="application\threads\thread_recv.c" />
+            </Folder>
+        </Folder>
+        <Folder name="include">
+            <File name="include\benben.h" />
+            <File name="include\bhashmap.h" />
+            <File name="include\blist.h" />
+            <File name="include\bmemory.h" />
+            <File name="include\bmysql.h" />
+            <File name="include\bqueue.h" />
+            <File name="include\bsocket.h" />
+            <File name="include\bthreads.h" />
+            <File name="include\connection.h" />
+            <File name="include\error.h" />
+            <File name="include\message.h" />
+            <File name="include\type.h" />
+            <File name="include\unp.h" />
+            <File name="include\unpthread.h" />
+        </Folder>
+        <Folder name="lib">
+            <Folder name="collections">
+                <File name="lib\collections\bhashmap.c" />
+                <File name="lib\collections\blist.c" />
+                <File name="lib\collections\bmemory.c" />
+                <File name="lib\collections\bqueue.c" />
+            </Folder>
+            <Folder name="db">
+                <Folder name="mysql">
+                    <File name="lib\db\mysql\bmysql.c" />
+                </Folder>
+            </Folder>
+            <File name="lib\bsocket.c" />
+            <File name="lib\error.c" />
+            <File name="lib\readline.c" />
+            <File name="lib\signal.c" />
+            <File name="lib\sig_chld_waitpid.c" />
+            <File name="lib\str_cli.c" />
+            <File name="lib\str_echo.c" />
+            <File name="lib\tcp_connect.c" />
+            <File name="lib\tcp_listen.c" />
+            <File name="lib\unp.c" />
+            <File name="lib\wraplib.c" />
+            <File name="lib\wrappthread.c" />
+            <File name="lib\wrapsock.c" />
+            <File name="lib\wrapstdio.c" />
+            <File name="lib\wrapunix.c" />
+        </Folder>
+        <File name=".project" />
+        <File name="main.c" />
+        <File name="Makefile" />
+    </Project>
+</NotepadPlus>

@@ -3,8 +3,8 @@
 <assets>
 	<item id="1" type="xml" uri="./assets/xml/messages.xml?v=5"  title="messages" delay="true" />
 	<item id="loginWindow" type="swf" uri="./assets/swf/login.swf?v=1"  title="登录框" />
-	<item id="HallUiRes" type="swf" uri="./assets/swf/HallUiRes.swf?v=4"  title="大厅素材包" />
-	
+	<item id="HallUiRes" type="swf" uri="./assets/swf/HallUiRes.swf?v=5"  title="大厅素材包" />
+	<item id="room" type="swf" uri="./assets/swf/room.swf?v=2"  title="对战房间" />
 	<!-- 
 	<item id="2" type="img" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_3001.jpg?v=5"  title="bg_32" />
 	<item id="3" type="img" uri="http://dev.tencent-kaixin.gameserver.com/static/d/d/bg_4001.jpg?v=5"  title="bg_33" />

@@ -1,9 +1,10 @@
 package bui.controls.supportClasses
 {
-	import bui.layouts.supportClasses.LayoutBase;
-	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	
+	import bui.layouts.VerticalAlign;
+	import bui.layouts.supportClasses.LayoutBase;
 	
 	/**
 	 * GroupBase 类为显示可视元素的组件定义基类。
@@ -15,11 +16,15 @@ package bui.controls.supportClasses
 		protected var _elements:Array;
 		protected var _border:Boolean = false;
 		protected var _borderColor:uint = 0xff0000;
+		protected var _verticalAlign:String = VerticalAlign.MIDDLE;
+		protected var _horizontalAlign:String;
 		
 		public function GroupBase()
 		{
 			_elements = new Array();
 		}
+		
+		
 		
 		public function addElement(element:DisplayObject, index:int = -1):void
 		{
@@ -83,11 +88,7 @@ package bui.controls.supportClasses
 			{
 				graphics.clear();
 				graphics.lineStyle(1, _borderColor);
-				graphics.moveTo(0, 0);
-				graphics.lineTo(width, 0);
-				graphics.lineTo(width, height);
-				graphics.lineTo(0,height);
-				graphics.endFill();
+				graphics.drawRect(0, 0, width, height);
 			}
 		}
 		

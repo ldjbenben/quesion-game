@@ -73,6 +73,10 @@ void* thread_recv(void* arg)
 				{
 					printf("recv msg fial. the errno is %d, error info is %s.\n", errno, strerror(errno));
 				}
+				else if(len == 0)
+				{
+					
+				}
 				else if(len > 0)
 				{
 					message_queue_push(_create_message(g_client_fds[i], buf));	

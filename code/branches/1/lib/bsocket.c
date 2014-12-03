@@ -1,5 +1,13 @@
 #include "bsocket.h"
 
+
+byte bsocket_read_byte(bmessage_t* pMsg)
+{
+	void* p = ( (void*)(pMsg->data) ) + pMsg->read_cursor;
+	pMsg->read_cursor += sizeof(byte);
+	return *(byte*)p;
+}
+
 int bsocket_read_int(bmessage_t* pMsg)
 {
 	void* p = ( (void*)(pMsg->data) ) + pMsg->read_cursor;
@@ -15,6 +23,14 @@ char* bsocket_read_string(bmessage_t* pMsg, char* recv, trans_str_size_t* len)
 	pMsg->read_cursor += sizeof(trans_str_size_t) + *len;
 	
 	return recv;
+}
+
+void bsocket_write_byte(bresponse_t* response, byte value)
+{
+	void* p = ( (void*)(response->data) ) + response->cursor;
+	*((byte*)p) = value;
+	
+	response->cursor += sizeof(byte);
 }
 
 void bsocket_write_int(bresponse_t* response, int value)
@@ -48,11 +64,17 @@ void bsocket_flush(bmessage_t* msg, bresponse_t* response)
 {
 	int cursor = 0;
 	char data[MAX_TEXT] = {0};
-
-	*(int*)data = htonl(msg->header.client_context_id);
+	
+	*(char*)data = response->type;
+	cursor += 1;
+	
+	*(int*)((void*)data + cursor) = htonl(msg->header.client_context_id);
 	cursor += sizeof(int);
+	
 	*(int*)( (void*)data + cursor ) = htonl(response->code);
 	cursor += sizeof(int);
+	
 	memcpy((void*)data + cursor, response->data, response->cursor);
+	
 	Writen(msg->conn->fd, data, response->cursor + cursor);
 }

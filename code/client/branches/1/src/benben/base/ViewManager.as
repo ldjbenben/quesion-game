@@ -3,9 +3,11 @@ package benben.base
 	import application.views.BaseView;
 	import application.views.LoadingView;
 	
+	import benben.Benben;
 	import benben.utils.StringHelper;
 	
 	import flash.display.Sprite;
+	import flash.utils.Dictionary;
 	import flash.utils.getDefinitionByName;
 
 	public class ViewManager extends Component
@@ -15,6 +17,10 @@ package benben.base
 		 * 视图集合
 		 */
 		private var _viewsObj:Object = {};
+		/**
+		 * 视图代理集合
+		 */
+		private var _proxiesObj:Object = {};
 		/**
 		 * 当前视图ID
 		 */
@@ -35,12 +41,20 @@ package benben.base
 			if(!_viewsObj.hasOwnProperty(id))
 			{
 				_viewsObj[id] = this.createView(id);
+				
 				if(_currentView)
 				{
 					_viewsObj[_currentView].out();
 					this._stage.removeChild(_viewsObj[_currentView]);
 				}
+				
 				_viewsObj[id].init();
+				
+				if(Benben.app.views.hasOwnProperty(id+"_proxy"))
+				{
+					_proxiesObj[id] = this.createViewProxy(id, _viewsObj[id]);
+					_proxiesObj[id].init();
+				}
 			}
 			else
 			{
@@ -53,6 +67,18 @@ package benben.base
 			_stage.addChild(_viewsObj[id]);
 			_viewsObj[id].enter();
 			_currentView = id;
+		}
+		
+		private function createViewProxy(id:String, view:BaseView):ViewProxy
+		{
+			var proxy:Object = new (getDefinitionByName("application.proxies."+StringHelper.ucword(id)+"ViewProxy"))(view);
+			
+			if(!(proxy is ViewProxy))
+			{
+				return null;
+			}
+			
+			return (proxy as ViewProxy);
 		}
 		
 		private function createView(id:String):BaseView

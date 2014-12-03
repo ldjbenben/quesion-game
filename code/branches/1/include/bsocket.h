@@ -10,7 +10,10 @@ bool read_bool(int connfd);
 byte read_byte(int connfd);
 byte* read_bytes(int connfd);
 */
-
+/**
+ * 从给定的bmessage结构中读取一字节
+ */
+byte bsocket_read_byte(bmessage_t* pMsg);
 /**
  * 从给定的bmessage结构中读取一整数
  */
@@ -27,6 +30,10 @@ int bsocket_read_int(bmessage_t* pMsg);
  * 程序最后会通过此参数返回最终填充的字节数.
  */
 char* bsocket_read_string(bmessage_t* pMsg, char* recv, trans_str_size_t* len);
+/**
+ * 往给定的bmessage结构中写入一个byte
+ */
+void bsocket_write_byte(bresponse_t* response, byte value);
 /**
  * 往给定的bmessage结构中写入一个整数
  */

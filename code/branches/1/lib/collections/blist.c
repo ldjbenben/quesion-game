@@ -1,16 +1,16 @@
 #include "blist.h"
-#include "bmemory.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 static blist_t lc_blists[BLIST_MAX_NUM] = {{0}};
-static bmemory_pool_id_t lc_pool_id = 0;
+static bmemory_pool_id_t lc_node_pool_id = 0;
 
-static blist_t* get_blist(blist_id_t);
+//static blist_t* get_blist(blist_id_t);
 
 void blist_init()
 {
-	
+	lc_node_pool_id = bmemory_pool_register(sizeof(blist_node_t), 3000, 1000);
 }
 
 void blist_destroy(void)
@@ -26,18 +26,15 @@ void blist_destroy(void)
 	}
 }
 
-blist_id_t blist_register(blist_size_t size)
+blist_id_t blist_register(int unitSize, blist_size_t size)
 {
-	if(lc_pool_id == 0)
-	{
-		lc_pool_id = bmemory_pool_register(sizeof(blist_node_t), 2000, 1000);
-	}
+	bmemory_pool_id_t poolId = bmemory_pool_register(unitSize, size, 1000);
 	
 	int id;
 	
 	for(id=0; id<BLIST_MAX_NUM; id++)
 	{
-		if(lc_blists[id].maxSize == 0)
+		if(lc_blists[id].unitSize == 0)
 		{
 			break;
 		}
@@ -49,7 +46,11 @@ blist_id_t blist_register(blist_size_t size)
 		exit(1);
 	}
 	
+	bzero(&lc_blists[id], sizeof(size_t));
+	
+	lc_blists[id].poolId = poolId;
 	lc_blists[id].maxSize = 0;
+	lc_blists[id].unitSize = unitSize;
 
 	return id+1;
 }
@@ -63,13 +64,7 @@ void blist_unregister(blist_id_t id)
 		return;
 	}
 
-	blist_node_t* node = blist->header;
-
-	while(node != NULL)
-	{
-		bmemory_free(lc_pool_id, node);	
-		node = node->next;
-	}
+	bmemory_pool_unregister(blist->poolId);	
 	
 	blist->header = blist->tail = NULL;
 	blist->size = blist->maxSize = 0;
@@ -83,13 +78,16 @@ void blist_node_insert(blist_id_t id, void* value)
 	{
 		return;
 	}
+
+	blist_node_t* node = (blist_node_t*)bmemory_get(lc_node_pool_id, 1);
 	
-	blist_node_t* node = (blist_node_t*)bmemory_get(lc_pool_id, 1);
+	void* pData = (blist_node_t*)bmemory_get(blist->poolId, 1);
+	memcpy(pData, value, blist->unitSize);
 	node->next = NULL;
 	node->pre = NULL;
-	node->value = value;
+	node->value = pData;
 	blist->size++;
-	
+	printf("blist->header:%p\n", blist->header);
 	if(blist->header == NULL)
 	{
 		blist->header = blist->tail = node;
@@ -100,6 +98,7 @@ void blist_node_insert(blist_id_t id, void* value)
 		blist->tail->next = node;
 		blist->tail = node;
 	}
+	printf("node:%p\n", node);
 }
 
 void blist_node_remove(blist_id_t id, void* value)
@@ -130,7 +129,8 @@ void blist_node_remove(blist_id_t id, void* value)
 			blist->size--;
 			tmp = node;
 			node = node->next;
-			bmemory_free(lc_pool_id, tmp); // 释放内存
+			bmemory_free(blist->poolId, tmp->value);
+			bmemory_free(lc_node_pool_id, tmp);
 		}
 		else
 		{
@@ -151,12 +151,31 @@ blist_size_t blist_size(blist_id_t id)
 	return blist->size;
 }
 
-static blist_t* get_blist(blist_id_t id)
+void blist_walk(blist_id_t id, void (*func)(void*, void*, void*), void* lparam, void* rparam)
+{
+	blist_t* blist = get_blist(id);
+	
+	if(blist == NULL)
+	{
+		return;
+	}
+	
+	blist_node_t* node = blist->header;
+	blist_report();
+	while(node != NULL)
+	{
+		printf("node:%p\n", node);
+		(*func)(node->value, lparam, rparam);
+		node = node->next;
+	}
+}
+
+blist_t* get_blist(blist_id_t id)
 {
 	id--;
 	blist_t* blist = &lc_blists[id];
 	
-	if(blist->maxSize == 0)
+	if(blist->unitSize == 0)
 	{
 		blist = NULL;
 	}
@@ -193,5 +212,5 @@ void blist_report(void)
 		printf("\n节点容量：%d\t已使用节点数：%d\n", blist->maxSize, blist->size);
 	}
 
-	printf("\n==========================================\n");
+	printf("\n============================================\n");
 }

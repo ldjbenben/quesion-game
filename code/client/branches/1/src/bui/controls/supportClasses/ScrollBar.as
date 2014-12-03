@@ -1,13 +1,12 @@
 ﻿package bui.controls.supportClasses
 {
+	import flash.events.MouseEvent;
+	
 	import bui.base.UIComponent;
 	import bui.skins.ProgrammaticSkin;
 	import bui.skins.ben.ScrollArrowSkin;
 	import bui.skins.ben.ScrollLineSkin;
 	import bui.skins.ben.ScrollTrackSkin;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	public class ScrollBar extends UIComponent
 	{
@@ -19,11 +18,11 @@
 		/**
 		 * 控件尺寸大小（以像素为单位）。
 		 */
-		protected var _scrollSize:Number;
+		protected var _scrollSize:Number = 200;
 		/**
 		 * 控件厚度
 		 */
-		protected var _scrollThickness:Number;
+		protected var _scrollThickness:Number = 15;
 		/**
 		 * 按下箭头按钮时的滚动量（以像素为单位）。
 		 */
@@ -64,6 +63,16 @@
 		 * ScrollBar 中拉条的外观
 		 */
 		protected var _line:ProgrammaticSkin;
+		/**
+		 * 内容高度.垂直滚动条根据此项来得知内容实际高度
+		 */
+		protected var _contentHeight:Number = 0;
+		/**
+		 * 内容宽度.垂直滚动条根据此项来得知内容实际宽度
+		 */
+		protected var _contentWdith:Number = 0;
+		protected var _trackStageY:Number = 0;
+		protected var _trackStageX:Number = 0;
 		
 		
 		public function ScrollBar()
@@ -76,10 +85,33 @@
 			_line.addEventListener(MouseEvent.MOUSE_DOWN, onLineMouseDown);
 			_line.addEventListener(MouseEvent.MOUSE_UP, onLineMouseUp);
 			_line.addEventListener(MouseEvent.CLICK, onLineMouseClick);
+			_track.addEventListener(MouseEvent.MOUSE_DOWN, onTrackMouseDown);
 			_track.addEventListener(MouseEvent.MOUSE_MOVE, onTrackMouseMove);
 			_track.addEventListener(MouseEvent.CLICK, onTrackMouseClick);
+			_upArrow.addEventListener(MouseEvent.CLICK, onUpArrowClick);
+			_downArrow.addEventListener(MouseEvent.CLICK, onDownArrowClick);
 		}
 		
+		public function get contentWdith():Number
+		{
+			return _contentWdith;
+		}
+
+		public function set contentWdith(value:Number):void
+		{
+			_contentWdith = value;
+		}
+
+		public function get contentHeight():Number
+		{
+			return _contentHeight;
+		}
+
+		public function set contentHeight(value:Number):void
+		{
+			_contentHeight = value;
+		}
+
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
@@ -92,6 +124,8 @@
 			{
 				hScroll(unscaledWidth, unscaledHeight);
 			}
+			
+			adjustLineSize();
 		}
 		
 		private function hScroll(unscaledWidth:Number, unscaledHeight:Number):void
@@ -99,7 +133,6 @@
 			_downArrow.x = _scrollSize;
 			
 			addChild(_track);
-			_track.height = 300;
 			_upArrow.rotation = -90;
 			_downArrow.rotation = -90;
 			_track.rotation = -90;
@@ -109,17 +142,27 @@
 		
 		private function vScroll(unscaledWidth:Number, unscaledHeight:Number):void
 		{
+			_upArrow.unscaleWidth = scrollThickness;
+			_upArrow.unscaleHeight = scrollThickness;
+			_downArrow.unscaleWidth = scrollThickness;
+			_downArrow.unscaleHeight = scrollThickness;
 			addChild(_upArrow);
 			
-			_line.measureHeight = 20;
-			_track.measureHeight = _scrollSize;
+			_line.unscaleWidth = scrollThickness;
+			_track.unscaleHeight = scrollSize;
+			_track.unscaleWidth = scrollThickness;
 			_track.addChild(_line);
 			addChild(_track);
 			
-			_track.y = 20
+			_track.y = scrollThickness
 			_downArrow.y = _track.y + _scrollSize;
 			
 			addChild(_downArrow);
+		}
+		
+		protected function adjustLineSize():void
+		{
+		
 		}
 		
 		protected function onLineMouseDown(evt:MouseEvent):void
@@ -128,6 +171,11 @@
 		
 		protected function onLineMouseUp(evt:MouseEvent):void
 		{
+		}
+		
+		protected function onTrackMouseDown(evt:MouseEvent):void
+		{
+			
 		}
 		
 		protected function onTrackMouseMove(evt:MouseEvent):void
@@ -141,6 +189,14 @@
 		protected function onLineMouseClick(evt:MouseEvent):void
 		{
 			evt.stopPropagation();
+		}
+		
+		protected function onUpArrowClick(evt:MouseEvent):void
+		{
+		}
+		
+		protected function onDownArrowClick(evt:MouseEvent):void
+		{
 		}
 		
 		/**

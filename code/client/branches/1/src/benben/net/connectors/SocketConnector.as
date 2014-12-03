@@ -1,10 +1,5 @@
 package benben.net.connectors
 {
-	import application.config.ApiConfig;
-	
-	import benben.base.Component;
-	import benben.net.TransferDataType;
-	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -12,6 +7,11 @@ package benben.net.connectors
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
+	
+	import application.config.ApiConfig;
+	
+	import benben.base.Component;
+	import benben.net.TransferDataType;
 
 	public class SocketConnector extends Component implements IConnector
 	{
@@ -20,10 +20,15 @@ package benben.net.connectors
 		private var _bytes:ByteArray;
 		private var _callbackMap:Dictionary;
 		private var _callbackCursor:int;
+		private var _serverCallbackMap:Dictionary;
 		private var _host:String;
 		private var _port:int;
 		private var _autoConnect:Boolean = true;
 		private var _bytesNum:int;  // 内容数据字节长度(不包括信息头)
+		/**
+		 * 消息类型。0表示API回调，1表示服务器推送
+		 */
+		private var _msgType:int = 0;
 		
 		public function SocketConnector()
 		{
@@ -31,6 +36,7 @@ package benben.net.connectors
 			_data = new Array();
 			_bytes = new ByteArray();
 			_callbackMap = new Dictionary();
+			_serverCallbackMap = new Dictionary();
 		}
 		
 		override public function init():void
@@ -97,15 +103,31 @@ package benben.net.connectors
 				case TransferDataType.STRING:
 					num = value.length;
 					break;
+				case TransferDataType.BYTE:
+					num = 1;
+					break;
 			}
 			
 			return num;
 		}
 		
+		public function registerServerCallback(apiname:String, callback:Function):void
+		{
+			var apiObj:Object = ApiConfig.getClientApi(apiname);
+			_serverCallbackMap[apiObj.id] = callback;
+		}
+		
+		public function unregisterServerCallback(apiname:String):void
+		{
+			var apiObj:Object = ApiConfig.getClientApi(apiname);
+			delete _serverCallbackMap[apiObj.id];
+		}
+		
 		public function request(apiname:String, callback:Function):void
 		{
+			_bytes.clear();
 			var d:Array = new Array();
-			var apiObj:Object = ApiConfig.get(apiname);
+			var apiObj:Object = ApiConfig.getServerApi(apiname);
 			
 			_callbackMap[_callbackCursor] = callback;
 			
@@ -126,12 +148,13 @@ package benben.net.connectors
 					case TransferDataType.STRING:
 						_bytes.writeUTF(obj["value"]);
 						break;
+					case TransferDataType.BYTE:
+						_bytes.writeByte(obj["value"]);
 				}
 			}
 			
 			_socket.writeBytes(_bytes);
 			_socket.flush();
-			_bytes.clear();
 			reset();
 		}
 		
@@ -143,15 +166,26 @@ package benben.net.connectors
 		
 		protected function socketDataHandler(event:ProgressEvent):void 
 		{
+			var type:int = _socket.readByte();
 			var msgId:int = _socket.readInt();
 			var bytes:ByteArray = new ByteArray();
 			_socket.readBytes(bytes);
 			
-			if(beforeCallback(bytes))
+			if(type == 0)
 			{
-				if(_callbackMap.hasOwnProperty(msgId))
+				if(beforeCallback(bytes))
 				{
-					_callbackMap[msgId](bytes);
+					if(_callbackMap.hasOwnProperty(msgId))
+					{
+						_callbackMap[msgId](bytes);
+					}
+				}
+			}
+			else
+			{
+				if(_serverCallbackMap.hasOwnProperty(msgId))
+				{
+					_serverCallbackMap[msgId](bytes);
 				}
 			}
 		}

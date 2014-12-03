@@ -4,6 +4,7 @@
 #include "bmemory.h"
 #include "bthreads.h"
 #include "model.h"
+#include "blist.h"
 
 void sig_int(int signo);
 void* thread_recv(void*);
@@ -74,7 +75,9 @@ static void application_init()
 {
 	model_connection_init();
 	bmysql_init();
+	blist_init();
 	model_user_init();
+	model_room_init();
 	
 	// 创建message线程
 	Pthread_create(&thread_recv_tid, NULL, &thread_recv, NULL);

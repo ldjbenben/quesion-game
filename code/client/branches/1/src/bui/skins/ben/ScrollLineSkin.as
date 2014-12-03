@@ -12,61 +12,47 @@
 
 		public function ScrollLineSkin()
 		{
-			_measureWidth = 20;
-			_measureHeight = 20;
+			_unscaleWidth = 20;
+			_unscaleHeight = 20;
 
 			addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			
+			registerStatement("common", commonStatement);
+			registerStatement("down", downStatement);
 		}
 		
-		override protected function states():Dictionary
+		public function commonStatement(enter:Boolean = true):void
 		{
-			var dic:Dictionary = new Dictionary();
-			dic["common"] = commonState;
-			dic["down"] = downState;
-			return dic;
-		}
-
-		private function commonState():void
-		{
-			if (_commonState == null)
-			{
-				_commonState = new Shape();
-				_commonState.graphics.beginFill(0x006699);
-				_commonState.graphics.drawRect(0, 0, _measureWidth, _measureHeight);
-				_commonState.graphics.endFill();
-			}
+			if(_commonState) removeChild(_commonState);
+			_commonState = new Shape();
+			_commonState.graphics.beginFill(0x006699);
+			_commonState.graphics.drawRect(0, 0, _unscaleWidth, _unscaleHeight);
+			_commonState.graphics.endFill();
 			addChild(_commonState);
 		}
 
-		private function downState():void
+		public function downStatement(enter:Boolean = true):void
 		{
-			if (_downState == null)
-			{
-				_downState = new Shape();
-				_downState.graphics.beginFill(0x00FF99);
-				_downState.graphics.drawRect(0, 0, _measureWidth, _measureHeight);
-				_downState.graphics.endFill();
-			}
+			_downState = new Shape();
+			_downState.graphics.beginFill(0x00FF99);
+			_downState.graphics.drawRect(0, 0, _unscaleWidth, _unscaleHeight);
+			_downState.graphics.endFill();
 		}
 
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
-			jumpState("common");
-			//addChild(_commonState);
+			statement = "common";
 		}
 
 		private function onMouseDown(evt:MouseEvent):void
 		{
-			downState();
-			removeChild(_commonState);
-			addChild(_downState);
+			statement = "down";
 		}
 
 		private function onMouseUp(evt:MouseEvent):void
 		{
-			removeChild(_downState);
-			addChild(_commonState);
+			statement = "common";
 		}
 		
 	}

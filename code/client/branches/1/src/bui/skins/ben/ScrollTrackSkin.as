@@ -4,19 +4,16 @@
 	
 	public class ScrollTrackSkin extends ProgrammaticSkin
 	{
-		
-		
 		public function ScrollTrackSkin()
 		{
-			_measureWidth = 20;
-			_measureHeight = 300;
+			_unscaleWidth = 20;
+			_unscaleHeight = 200;
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
-			trace(unscaledWidth + "," + _measureHeight);
 			graphics.beginFill(0x990099);
-			graphics.drawRect(0, 0, unscaledWidth, _measureHeight);
+			graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
 			graphics.endFill();
 		}
 	}

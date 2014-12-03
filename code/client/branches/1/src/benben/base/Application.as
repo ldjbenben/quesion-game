@@ -184,5 +184,11 @@ package benben.base
 			return _stage;
 		}
 
+		public function get views():Dictionary
+		{
+			return _views;
+		}
+
+
 	}
 }

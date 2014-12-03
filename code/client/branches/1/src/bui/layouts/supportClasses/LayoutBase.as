@@ -3,7 +3,6 @@
 	import bui.controls.supportClasses.GroupBase;
 	
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 
 	public class LayoutBase
 	{
@@ -13,12 +12,8 @@
 		protected var _rowHeight:Number = 0;
 		protected var _rowCount:int;
 		protected var _columnWidth:Number = 0;
-		protected var _columnCount:int;
+		protected var _columnCount:int = 0;
 		
-		public function layout():void
-		{
-		
-		}
 		
 		public function elementAdded(element:DisplayObject, index:int):void
 		{

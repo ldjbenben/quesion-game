@@ -22,12 +22,15 @@ typedef int dword;
 #ifndef bool
 typedef char bool;
 #endif
+#ifndef byte
 typedef char byte;
-
+#endif
 
 
 typedef struct user_s{
 	char username[USERNAME_LEN];
+	int roomId;
+	int tableId;
 }user_t;
 
 typedef struct bconnection_s{
@@ -38,7 +41,8 @@ typedef struct bconnection_s{
 }bconnection_t;
 
 typedef struct bresponse_s{
-	//int client_context_id;
+	char type; // 0表示API响应，1表示服务器主动推送
+	int client_context_id;
 	int code; // 结果码
 	char data[MAX_TEXT];
 	int cursor;

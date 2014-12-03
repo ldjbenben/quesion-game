@@ -3,6 +3,9 @@
 
 #include "benben.h"
 
+
+
+
 void message_init();
 void message_destroy();
 void message_queue_push(bmessage_t* pMsg);

@@ -4,7 +4,7 @@ package bui.events
 	
 	public class ScrollEvent extends Event
 	{
-		public const SCROLL:String = "scroll";
+		public static const SCROLL:String = "scroll";
 		
 		/**
 		 * 滚动导致的滚动(内容)位置值的更改

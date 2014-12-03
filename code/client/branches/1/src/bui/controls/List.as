@@ -1,34 +1,50 @@
 package bui.controls
 {
+	import bui.base.Area;
 	import bui.base.UIComponent;
-	import bui.controls.supportClasses.GroupBase;
+	import bui.events.ScrollEvent;
 	import bui.layouts.TileLayout;
 	import bui.layouts.supportClasses.LayoutBase;
-	
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	
 	public class List extends UIComponent
 	{
-		protected var _autoAlign:Boolean;
+		private var _autoAlign:Boolean;
 		private var _dataProvider:Array;
-		protected var _group:Group;
-		protected var _layout:LayoutBase;
-		public var vScroll:VScrollBar;
-		public var hScroll:HScrollBar;
+		private var _group:Group;
+		private var _layout:LayoutBase;
+		private var _vScroll:VScrollBar;
+		private var _hScroll:HScrollBar;
+		private var _contentArea:Area;
 		
 		public function List()
 		{
+			_unscaleWidth = 200;
+			_unscaleHeight = 300;
 			_group = new Group();
 			_layout = new TileLayout();
+			_vScroll = new VScrollBar();
+			_hScroll = new HScrollBar();
+			
 			_layout.target = _group;
 			_group.layout = _layout;
-			_layout = new TileLayout();
+			_vScroll.addEventListener(ScrollEvent.SCROLL, onVScrolling);
+		}
+		
+		public function getItem(index:int):Object
+		{
+			return _group.getElement(index);
+		}
+		
+		private function onVScrolling(evt:ScrollEvent):void
+		{
+			_group.y = -evt.position;
 		}
 		
 		public function addItem(item:DisplayObject, index:int = -1):void
 		{
 			_group.addElement(item, index);
+			_vScroll.contentHeight = _group.height;
 		}
 		
 		public function removeItem(index:int):void
@@ -38,7 +54,16 @@ package bui.controls
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
+			graphics.beginFill(0xffffff, 0);
+			graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
+			graphics.endFill();
+			
+			addChild(_vScroll);
 			addChild(_group);
+			//scrollRect = new Rectangle(0, 0, _group.width + _vScroll.width, _unscaleHeight);
+			_vScroll.scrollSize = _unscaleHeight;
+			_vScroll.x = _group.width;
+			_vScroll.contentHeight = _group.height;
 		}
 		/*
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void

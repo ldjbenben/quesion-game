@@ -201,6 +201,14 @@ void bhashmap_unset(bhashmap_id_t id, const char* key)
 	}
 }
 
+void bhashmap_iunset(bhashmap_id_t id, int key)
+{
+	char str[16] = {0};
+	itoa(key, str, 10);
+	str[15] = 0;
+	bhashmap_unset(id, str);
+}
+
 static bhashmap_entry_t* _find_entry(bhashmap_t* bhashmap, const char* key, bhashmap_size_t* index)
 {
 	bhashmap_size_t i = _find_hash_index(bhashmap, key);

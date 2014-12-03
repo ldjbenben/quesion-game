@@ -1,138 +1,74 @@
 package application.views
 {
-	import benben.Benben;
+	import flash.events.MouseEvent;
 	
-	import bui.controls.HGroup;
-	import bui.controls.HScrollBar;
+	import application.display.Table;
+	import application.events.SeatEvent;
+	
 	import bui.controls.List;
-	import bui.controls.VGroup;
-	import bui.controls.VScrollBar;
-	import bui.skins.ben.ScrollArrowSkin;
-	
-	import flash.display.Sprite;
-	import flash.errors.EOFError;
-	import flash.events.TimerEvent;
-	import flash.utils.ByteArray;
-	import flash.utils.Timer;
 	
 	
 	public class HallView extends BaseView
 	{
-		private var _chessboards:Array;
+		private var _chessboards:List;
+		private var _roomId:int;
 		
+		public function get chessboards():List
+		{
+			return _chessboards;
+		}
+
 		override public function init():void
 		{
 			super.init();
-			_chessboards = new Array();
+			
+			_chessboards = new List();
+			_chessboards.layout.columnWidth = 150;
+			_chessboards.layout.columnCount = 4;
+			_chessboards.layout.rowHeight = 50;
+			_chessboards.layout.verticalGap = 50;
+			_chessboards.layout.horizontalGap = 50;
+			
+			_chessboards.x = 100;
+			_chessboards.y = 20;
+			_chessboards.unscaleWidth = 200;
+			_chessboards.unscaleHeight = 300;
+//			_chessboards.alpha = 0.1;
+			addChild(_chessboards);
 		}
 		
 		override public function enter():void
 		{
-			Benben.app.connector.request("getTables", getTablesResponse); 
+			 
 		}
 		
-		private function getTablesResponse(bytes:ByteArray):void
+		public function initChessboards(list:Array):void
 		{
-			var b:int;
-			var item:Sprite;
-			var i:int;
-			try
+			for(var i:int = 0; i < list.length; i++)
 			{
-				while(true)
-				{
-					b = bytes.readByte();
-					item = Benben.app.assetsLoader.getImgFromPackage("HallUiRes", "chessboard_ico1");
-					_chessboards.push(item);
-					item.x += i*item.width;
-					//addChild(item);
-					i++;
-				}
+				var t:Table = new Table(i, list[i]);
+				
+				t.player1.addEventListener(MouseEvent.CLICK, onPlayer1SeatClick);
+				t.player2.addEventListener(MouseEvent.CLICK, onPlayer2SeatClick);
+				
+				_chessboards.addItem(t);
 			}
-			catch(exp:EOFError)
-			{
-				var vGroup:VGroup = new VGroup;
-				
-				vGroup.border = true;
-				addChild(vGroup);
-				vGroup.addElement(new ScrollArrowSkin(0xff0000));
-				vGroup.addElement(new ScrollArrowSkin(0x00ff00));
-				vGroup.addElement(new ScrollArrowSkin(0x0000ff));
-				vGroup.addElement(new ScrollArrowSkin(), 0);
-				vGroup.addElement(new ScrollArrowSkin(0xf000ff));
-				
-				
-				var hGroup:HGroup = new HGroup;
-				
-				hGroup.border = true;
-				hGroup.x = 100;
-				addChild(hGroup);
-				hGroup.addElement(new ScrollArrowSkin(0xff0000));
-				hGroup.addElement(new ScrollArrowSkin(0x00ff00));
-				hGroup.addElement(new ScrollArrowSkin(0x0000ff));
-				hGroup.addElement(new ScrollArrowSkin(), 0);
-				hGroup.addElement(new ScrollArrowSkin(0xf000ff));
-				
-				
-				var list:List = new List();
-				
-				list.layout.columnWidth = 50;
-				list.layout.columnCount = 4;
-				list.layout.rowHeight = 50;
-				
-				list.addItem(new ScrollArrowSkin(0xff0000));
-				list.addItem(new ScrollArrowSkin(0x00ff00));
-				list.addItem(new ScrollArrowSkin(0x0000ff));
-				list.addItem(new ScrollArrowSkin(0xffff00));
-				list.addItem(new ScrollArrowSkin(0x0000ff));
-				list.addItem(new ScrollArrowSkin(0xffff00));
-				list.addItem(new ScrollArrowSkin(0x0000ff));
-				list.addItem(new ScrollArrowSkin(0xffff00));
-				list.addItem(new ScrollArrowSkin(0xffff00));
-				list.addItem(new ScrollArrowSkin(0x0000ff));
-				list.addItem(new ScrollArrowSkin(0xffff00));
-				
-				list.x = 100;
-				list.y = 200;
-				addChild(list);
-				
-				var t:Timer = new Timer(2000, 10);
-				t.addEventListener(TimerEvent.TIMER, function(evt:TimerEvent):void{
-					//vGroup.removeElement(1);
-					//hGroup.removeElement(1);
-					list.removeItem(1);
-					trace("width:"+list.width+" height:"+list.height);
-				});
-				t.start();
-				
-//				vGroup.addElement(new ScrollArrowSkin(0xf000ff));
-				/*
-				var data:Array = new Array();
-				for(var j:int; j<10; j++)
-				{
-					data.push(new ScrollArrowSkin());
-				}
-				var tables:List = new List();
-				tables.columnCount = 3;
-				tables.dataProvider = data;
-				tables.cellPadding = 10;
-				addChild(tables);
-				*/
-				
-				/*
-				var vScroll:VScrollBar = new VScrollBar();
-				vScroll.y = 0;
-				vScroll.scrollSize = 300;
-				vScroll.scrollThickness = 20;
-				addChild(vScroll);
-				
-				var hScroll:HScrollBar = new HScrollBar();
-				hScroll.x = 300;
-				hScroll.y = 100;
-				hScroll.scrollSize = 300;
-				hScroll.scrollThickness = 20;
-				*/
-				//addChild(hScroll);
-			}
+		}
+		
+		private function onPlayer1SeatClick(evt:MouseEvent):void
+		{
+			var seatEvt:SeatEvent = new SeatEvent(SeatEvent.CHOICE);
+			seatEvt.postion = 0;
+			seatEvt.tableId = evt.currentTarget.tableId;
+			dispatchEvent(seatEvt);
+		}
+		
+		private function onPlayer2SeatClick(evt:MouseEvent):void
+		{
+			var seatEvt:SeatEvent = new SeatEvent(SeatEvent.CHOICE);
+			seatEvt.postion = 1;
+			seatEvt.tableId = evt.currentTarget.tableId;
+			dispatchEvent(seatEvt);
 		}
 	}
 }

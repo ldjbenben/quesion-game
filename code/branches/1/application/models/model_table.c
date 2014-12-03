@@ -3,7 +3,7 @@
 
 static pthread_mutex_t lc_mutex_tables;
 static bhashmap_id_t lc_hashmap_id;
-static game_table_t lc_tables[TABLE_COUNT] = {{0}}; 
+static game_table_t lc_tables[ROOM_TABLE_NUM] = {{0}}; 
 
 void model_table_init()
 {
@@ -22,7 +22,7 @@ int table_create(int master, const char* name)
 	int id = 0;
 	int i = -1;
 	
-	for(i=0; i<TABLE_COUNT; i++)
+	for(i=0; i<ROOM_TABLE_NUM; i++)
 	{
 		if(lc_tables[i].status == 0)
 		{

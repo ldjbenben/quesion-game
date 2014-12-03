@@ -5,8 +5,3 @@ return {
 		{"id":"assetsLoader", "assetsFile":"assets/assets.xml"}
 	]
 };
-
-function views():Array
-{
-	
-}

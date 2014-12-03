@@ -41,14 +41,17 @@ static void* thread_message_consume(void* arg)
 		{
 			switch(pMsg->header.id)
 			{
-				case 1:
+				case 10000:
 					controller_user_login(pMsg);
 					break;
-				case 2:
+				case 10001:
 					controller_user_list(pMsg);
 					break;
-				case 100:
-					controller_room_tables(pMsg);
+				case 10100:
+					controller_hall_enter(pMsg);
+					break;
+				case 10101:
+					controller_hall_sitdown(pMsg);
 					break;
 				default:
 					printf("Have not controller %d!\n", pMsg->header.id);

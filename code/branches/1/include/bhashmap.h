@@ -84,6 +84,14 @@ void* bhashmap_iget(bhashmap_id_t id, int key);
  * @return void
  */
 void bhashmap_unset(bhashmap_id_t id, const char* key);
+/**
+ * 删除键值对
+ * @param bhashmap_id_t id bhashmap标识
+ * @param int key 键名
+ * @param bhashmap_value_size_t type_len 值类型长度
+ * @return void
+ */
+void bhashmap_iunset(bhashmap_id_t id, int key);
 
 /**
  * 打印报告

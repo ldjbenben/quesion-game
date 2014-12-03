@@ -1,6 +1,6 @@
 VERSION =
 EXE = main$(VERSION)
-OBJECTS = $(EXE).o bsocket.o model_connection.o  model_user.o model_room.o model_table.o bmysql.o controller_room.o controller_user.o bmemory.o bqueue.o bhashmap.o model_message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
+OBJECTS = $(EXE).o bsocket.o model_connection.o  model_user.o model_room.o model_table.o bmysql.o controller_hall.o controller_room.o controller_user.o bmemory.o bqueue.o bhashmap.o model_message.o blist.o thread_recv.o thread_message_consume.o wrappthread.o unp.o readline.o wraplib.o wrapstdio.o wrapunix.o wrapsock.o error.o tcp_connect.o tcp_listen.o sig_chld_waitpid.o signal.o
 INCLUDE_DIR =  -I ./include -I ./application/include -I /usr/local/mysql/include
 LIB_DIR =  -L /usr/local/mysql/lib
 LIBS =  -lpthread -lmysqlclient
@@ -38,6 +38,9 @@ model_connection.o:./application/models/model_connection.c ./application/include
 	
 controller_user.o:./application/controllers/controller_user.c ./application/include/controller.h
 	$(CC) $(CFLAGS) -c ./application/controllers/controller_user.c -I /usr/local/mysql/include
+	
+controller_hall.o:./application/controllers/controller_hall.c ./application/include/controller.h
+	$(CC) $(CFLAGS) -c ./application/controllers/controller_hall.c -I /usr/local/mysql/include
 	
 controller_room.o:./application/controllers/controller_room.c ./application/include/controller.h
 	$(CC) $(CFLAGS) -c ./application/controllers/controller_room.c -I /usr/local/mysql/include
